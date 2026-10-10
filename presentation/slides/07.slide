@@ -1,0 +1,129 @@
+<Slide style={{ width: '1280px', height: '720px', padding: 0, background: '#F8FAFC' }}>
+  {/* Top accent bar */}
+  <Box style={{ position: 'absolute', top: 0, left: 0, width: '1280px', height: 6, background: 'linear-gradient(90deg, #0B1E3F 0%, #2563EB 100%)' }} />
+
+  {/* Section tag */}
+  <Box style={{ position: 'absolute', top: 28, left: 60, padding: '4px 12px', borderRadius: 4, background: '#0B1E3F' }}>
+    <Text style={{ fontSize: 11, color: '#FFFFFF', fontWeight: 700, letterSpacing: 1.5 }}>07 / INVESTIGATION RESULTS</Text>
+  </Box>
+
+  {/* Title */}
+  <Box style={{ position: 'absolute', top: 64, left: 60, width: 1160 }}>
+    <Text style={{ fontSize: 28, color: '#0B1E3F', fontWeight: 700, lineHeight: 1.2 }}>
+      The agent found two real problems hiding in the data
+    </Text>
+  </Box>
+
+  {/* Top timeline */}
+  <Box style={{ position: 'absolute', top: 130, left: 60, right: 60, padding: 12, borderRadius: 10, background: '#FFFFFF', border: '1px solid #E2E8F0' }}>
+    <Text style={{ fontSize: 11, color: '#2563EB', fontWeight: 700, letterSpacing: 1.5, marginBottom: 10 }}>SIMULATED DAY 2026-06-01 · THREE SCENARIOS · ALL DATA SIMULATED</Text>
+    <Box style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
+      {[
+        { time: '08:15', label: 'Scenario A', sub: 'Normal Operation', color: '#10B981', icon: '✓' },
+        { time: '11:15', label: 'Scenario B', sub: 'Overheating', color: '#F59E0B', icon: '!' },
+        { time: '15:08', label: 'Scenario C', sub: 'ATS Transfer Anomaly', color: '#EF4444', icon: '×' },
+      ].map((s, i) => (
+        <Box key={i} style={{ flex: 1, alignItems: 'center', flexDirection: 'row' }}>
+          <Box style={{ width: 48, height: 48, borderRadius: 24, background: s.color, alignItems: 'center', justifyContent: 'center' }}>
+            <Text style={{ fontSize: 22, color: '#FFFFFF', fontWeight: 800 }}>{s.icon}</Text>
+          </Box>
+          <Box style={{ marginLeft: 12, flex: 1 }}>
+            <Text style={{ fontSize: 11, color: s.color, fontWeight: 700, letterSpacing: 1 }}>{s.label} · {s.time}</Text>
+            <Text style={{ fontSize: 13, color: '#0F172A', fontWeight: 700 }}>{s.sub}</Text>
+          </Box>
+        </Box>
+      ))}
+    </Box>
+  </Box>
+
+  {/* Three work order cards */}
+  <Box style={{ position: 'absolute', top: 248, left: 60, right: 60, flexDirection: 'row', gap: 12 }}>
+    {/* WO-01 CRITICAL */}
+    <Box style={{ flex: 1, padding: 12, borderRadius: 10, background: '#FFFFFF', border: '1px solid #FECACA', borderTop: '4px solid #EF4444' }}>
+      <Box style={{ padding: '3px 10px', borderRadius: 12, background: '#FEE2E2', alignSelf: 'flex-start', marginBottom: 6 }}>
+        <Text style={{ fontSize: 10, color: '#B91C1C', fontWeight: 700, letterSpacing: 1 }}>WO-01 · CRITICAL</Text>
+      </Box>
+      <Text style={{ fontSize: 14, color: '#0F172A', fontWeight: 700, marginBottom: 6 }}>ATS Transfer Anomaly</Text>
+      <Box style={{ flexDirection: 'column', gap: 3 }}>
+        <Text style={{ fontSize: 11, color: '#64748B', lineHeight: 1.35 }}>
+          <Text style={{ color: '#EF4444', fontWeight: 700 }}>OBSERVED:</Text> 11 FAILED transfers in a row
+        </Text>
+        <Text style={{ fontSize: 11, color: '#64748B', lineHeight: 1.35 }}>
+          <Text style={{ color: '#EF4444', fontWeight: 700 }}>OBSERVED:</Text> 0A current, position mismatch
+        </Text>
+        <Text style={{ fontSize: 11, color: '#64748B', lineHeight: 1.35 }}>
+          <Text style={{ color: '#64748B', fontWeight: 700 }}>SUSPECTED:</Text> contactor / actuator fault
+        </Text>
+        <Text style={{ fontSize: 10, color: '#94A3B8', lineHeight: 1.3 }}>
+          ⚠ Simulated data; outage duration inferred from alarm field, not independently measured
+        </Text>
+      </Box>
+    </Box>
+
+    {/* WO-02 HIGH */}
+    <Box style={{ flex: 1, padding: 12, borderRadius: 10, background: '#FFFFFF', border: '1px solid #FED7AA', borderTop: '4px solid #F59E0B' }}>
+      <Box style={{ padding: '3px 10px', borderRadius: 12, background: '#FEF3C7', alignSelf: 'flex-start', marginBottom: 6 }}>
+        <Text style={{ fontSize: 10, color: '#B45309', fontWeight: 700, letterSpacing: 1 }}>WO-02 · HIGH</Text>
+      </Box>
+      <Text style={{ fontSize: 14, color: '#0F172A', fontWeight: 700, marginBottom: 6 }}>Cooling System Margin</Text>
+      <Box style={{ flexDirection: 'column', gap: 3 }}>
+        <Text style={{ fontSize: 11, color: '#64748B', lineHeight: 1.35 }}>
+          <Text style={{ color: '#F59E0B', fontWeight: 700 }}>OBSERVED:</Text> coolant 44.8 → 107.7°C at 70% load
+        </Text>
+        <Text style={{ fontSize: 11, color: '#64748B', lineHeight: 1.35 }}>
+          <Text style={{ color: '#F59E0B', fontWeight: 700 }}>OBSERVED:</Text> oil 4.54 → 3.16 bar
+        </Text>
+        <Text style={{ fontSize: 11, color: '#64748B', lineHeight: 1.35 }}>
+          <Text style={{ color: '#64748B', fontWeight: 700 }}>SUSPECTED:</Text> blocked radiator / coolant aging
+        </Text>
+        <Text style={{ fontSize: 10, color: '#94A3B8', lineHeight: 1.3 }}>
+          ⚠ 105/107°C thresholds are simulation assumptions
+        </Text>
+      </Box>
+    </Box>
+
+    {/* WO-03 INFO */}
+    <Box style={{ flex: 1, padding: 12, borderRadius: 10, background: '#FFFFFF', border: '1px solid #BFDBFE', borderTop: '4px solid #2563EB' }}>
+      <Box style={{ padding: '3px 10px', borderRadius: 12, background: '#DBEAFE', alignSelf: 'flex-start', marginBottom: 6 }}>
+        <Text style={{ fontSize: 10, color: '#1E40AF', fontWeight: 700, letterSpacing: 1 }}>WO-03 · INFO</Text>
+      </Box>
+      <Text style={{ fontSize: 14, color: '#0F172A', fontWeight: 700, marginBottom: 6 }}>Continue Scheduled Maint.</Text>
+      <Box style={{ flexDirection: 'column', gap: 3 }}>
+        <Text style={{ fontSize: 11, color: '#64748B', lineHeight: 1.35 }}>
+          <Text style={{ color: '#2563EB', fontWeight: 700 }}>VERDICT:</Text> engine & alternator healthy
+        </Text>
+        <Text style={{ fontSize: 11, color: '#64748B', lineHeight: 1.35 }}>
+          <Text style={{ color: '#2563EB', fontWeight: 700 }}>FUEL:</Text> 31.2 L/h matches spec
+        </Text>
+        <Text style={{ fontSize: 11, color: '#64748B', lineHeight: 1.35 }}>
+          <Text style={{ color: '#2563EB', fontWeight: 700 }}>BATTERY:</Text> 24.27–28.04V healthy
+        </Text>
+        <Text style={{ fontSize: 10, color: '#94A3B8', lineHeight: 1.3 }}>
+          + add functional load tests to next service
+        </Text>
+      </Box>
+    </Box>
+  </Box>
+
+  {/* Bottom hero metric */}
+  <Box style={{ position: 'absolute', bottom: 60, left: 60, right: 60, padding: 12, borderRadius: 10, background: '#0B1E3F', flexDirection: 'row', justifyContent: 'space-around', alignItems: 'center' }}>
+    <Box style={{ alignItems: 'center' }}>
+      <Text style={{ fontSize: 32, color: '#EF4444', fontWeight: 800, lineHeight: 1 }}>CRITICAL</Text>
+      <Text style={{ fontSize: 11, color: '#94A3B8', marginTop: 4 }}>1 unresolved</Text>
+    </Box>
+    <Box style={{ alignItems: 'center' }}>
+      <Text style={{ fontSize: 32, color: '#F59E0B', fontWeight: 800, lineHeight: 1 }}>HIGH</Text>
+      <Text style={{ fontSize: 11, color: '#94A3B8', marginTop: 4 }}>1 unresolved</Text>
+    </Box>
+    <Box style={{ alignItems: 'center' }}>
+      <Text style={{ fontSize: 32, color: '#10B981', fontWeight: 800, lineHeight: 1 }}>VERDICT</Text>
+      <Text style={{ fontSize: 11, color: '#94A3B8', marginTop: 4 }}>NOT READY FOR SERVICE</Text>
+    </Box>
+  </Box>
+
+  {/* Footer */}
+  <Box style={{ position: 'absolute', bottom: 28, left: 60, right: 60, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+    <Text style={{ fontSize: 12, color: '#64748B' }}>GenBuddy · DORMATHON 2026 · Track 2: Agentic Solutions</Text>
+    <Text style={{ fontSize: 12, color: '#64748B' }}>07 / 10</Text>
+  </Box>
+</Slide>

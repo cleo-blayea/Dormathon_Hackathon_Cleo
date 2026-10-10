@@ -38,3 +38,9 @@ Thumbs.db
 
 # WorkBuddy local data (never publish)
 .workbuddy-ai/
+
+# Temporary presentation files
+presentation/.cache/
+presentation/.slidep/
+presentation/preview/
+presentation/~$*.pptx

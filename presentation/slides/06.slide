@@ -1,0 +1,72 @@
+<Slide style={{ width: '1280px', height: '720px', padding: 0, background: '#F8FAFC' }}>
+  {/* Top accent bar */}
+  <Box style={{ position: 'absolute', top: 0, left: 0, width: '1280px', height: 6, background: 'linear-gradient(90deg, #0B1E3F 0%, #2563EB 100%)' }} />
+
+  {/* Section tag */}
+  <Box style={{ position: 'absolute', top: 28, left: 60, padding: '4px 12px', borderRadius: 4, background: '#0B1E3F' }}>
+    <Text style={{ fontSize: 11, color: '#FFFFFF', fontWeight: 700, letterSpacing: 1.5 }}>06 / PRODUCT DEMO</Text>
+  </Box>
+
+  {/* Title */}
+  <Box style={{ position: 'absolute', top: 64, left: 60, width: 1160 }}>
+    <Text style={{ fontSize: 28, color: '#0B1E3F', fontWeight: 700, lineHeight: 1.2 }}>
+      The GenBuddy AI Investigation Center
+    </Text>
+  </Box>
+
+  {/* Subtitle */}
+  <Box style={{ position: 'absolute', top: 102, left: 60, width: 1160 }}>
+    <Text style={{ fontSize: 13, color: '#64748B', lineHeight: 1.4 }}>
+      A Flask dashboard where SMEs submit plain-English questions and read the agent's structured reports.
+    </Text>
+  </Box>
+
+  {/* LEFT - Screenshot placeholder for GenBuddy dashboard */}
+  <Box style={{ position: 'absolute', top: 140, left: 40, width: 760, height: 500, borderRadius: 10, background: '#FFFFFF', border: '2px dashed #CBD5E1', padding: 8, alignItems: 'center', justifyContent: 'center' }}>
+    <Box style={{ alignItems: 'center', justifyContent: 'center' }}>
+      <Text style={{ fontSize: 14, color: '#94A3B8', fontWeight: 700, letterSpacing: 1.5, marginBottom: 8 }}>SCREENSHOT PLACEHOLDER</Text>
+      <Text style={{ fontSize: 16, color: '#64748B', fontWeight: 600, textAlign: 'center', lineHeight: 1.4 }}>
+        GenBuddy AI Investigation Center
+      </Text>
+      <Text style={{ fontSize: 12, color: '#94A3B8', textAlign: 'center', marginTop: 8, lineHeight: 1.5 }}>
+        Capture from running dashboard showing:
+        <br />· User input textarea + example questions
+        <br />· Investigation status (awaiting → completed)
+        <br />· Agent report output (verdict, work orders)
+      </Text>
+    </Box>
+  </Box>
+
+  {/* RIGHT - 4 example questions + dashboard description */}
+  <Box style={{ position: 'absolute', top: 140, left: 820, right: 40, height: 500 }}>
+    <Text style={{ fontSize: 10, color: '#2563EB', fontWeight: 700, letterSpacing: 1.5, marginBottom: 4 }}>EXAMPLE QUESTIONS</Text>
+    <Text style={{ fontSize: 14, color: '#0B1E3F', fontWeight: 700, marginBottom: 8 }}>What users actually ask</Text>
+
+    <Box style={{ flexDirection: 'column', gap: 6 }}>
+      {[
+        { q: 'Is my backup generator ready for the next power outage?', tag: 'INV 1 · READINESS', color: '#06B6D4' },
+        { q: 'Why did my generator shut down during last week\'s outage?', tag: 'INV 2 · ROOT CAUSE', color: '#2563EB' },
+        { q: 'What should I tell my maintenance contractor to fix?', tag: 'INV 2 · CONTRACTOR BRIEF', color: '#2563EB' },
+        { q: 'Re-verify the readiness assessment end-to-end.', tag: 'INV 3 · AUDIT', color: '#94A3B8' },
+      ].map((item, i) => (
+        <Box key={i} style={{ padding: 6, borderRadius: 5, background: '#FFFFFF', border: '1px solid #E2E8F0', borderLeft: `3px solid ${item.color}` }}>
+          <Text style={{ fontSize: 11, color: '#0F172A', fontWeight: 600, lineHeight: 1.25 }}>{item.q}</Text>
+          <Text style={{ fontSize: 9, color: item.color, fontWeight: 700, letterSpacing: 1, marginTop: 2 }}>{item.tag}</Text>
+        </Box>
+      ))}
+    </Box>
+
+    <Box style={{ position: 'absolute', bottom: 0, left: 0, right: 0, padding: 8, borderRadius: 5, background: '#0B1E3F' }}>
+      <Text style={{ fontSize: 9, color: '#06B6D4', fontWeight: 700, letterSpacing: 1, marginBottom: 2 }}>WHAT THE DASHBOARD DOES</Text>
+      <Text style={{ fontSize: 9, color: '#CBD5E1', lineHeight: 1.35 }}>
+        Saves question to JSON · tracks status (awaiting → investigating → completed) · auto-polls every 5s · displays agent reports.
+      </Text>
+    </Box>
+  </Box>
+
+  {/* Footer */}
+  <Box style={{ position: 'absolute', bottom: 24, left: 60, right: 60, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+    <Text style={{ fontSize: 11, color: '#64748B' }}>GenBuddy · DORMATHON 2026 · Track 2: Agentic Solutions</Text>
+    <Text style={{ fontSize: 11, color: '#64748B' }}>06 / 10</Text>
+  </Box>
+</Slide>

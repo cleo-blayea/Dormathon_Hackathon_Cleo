@@ -1,0 +1,83 @@
+<Slide style={{ width: '1280px', height: '720px', padding: 0, background: '#0B1E3F' }}>
+  {/* Top accent bar */}
+  <Box style={{ position: 'absolute', top: 0, left: 0, width: '1280px', height: 6, background: 'linear-gradient(90deg, #06B6D4 0%, #2563EB 100%)' }} />
+
+  {/* Section tag */}
+  <Box style={{ position: 'absolute', top: 28, left: 60, padding: '4px 12px', borderRadius: 4, background: '#06B6D4' }}>
+    <Text style={{ fontSize: 11, color: '#0B1E3F', fontWeight: 700, letterSpacing: 1.5 }}>10 / CONCLUSION</Text>
+  </Box>
+
+  {/* Title */}
+  <Box style={{ position: 'absolute', top: 64, left: 60, width: 1160 }}>
+    <Text style={{ fontSize: 28, color: '#FFFFFF', fontWeight: 700, lineHeight: 1.2 }}>
+      GenBuddy = a backup generator that thinks with you
+    </Text>
+  </Box>
+
+  {/* Three takeaway cards */}
+  <Box style={{ position: 'absolute', top: 130, left: 60, right: 60, flexDirection: 'row', gap: 16 }}>
+    {[
+      {
+        icon: '01',
+        title: 'Plans before acting',
+        desc: 'The agent builds a multi-step plan, then executes tools and reads evidence independently.',
+        color: '#06B6D4',
+      },
+      {
+        icon: '02',
+        title: 'Reasons, not just matches',
+        desc: 'Cross-scenario thermal comparison and timeline reconstruction go beyond pattern matching.',
+        color: '#2563EB',
+      },
+      {
+        icon: '03',
+        title: 'Adapts per question',
+        desc: 'Different plans, tools, scopes, and deliverables for readiness vs root cause investigations.',
+        color: '#7C3AED',
+      },
+    ].map((card, i) => (
+      <Box key={i} style={{ flex: 1, padding: 18, borderRadius: 12, background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(6,182,212,0.25)' }}>
+        <Text style={{ fontSize: 32, color: card.color, fontWeight: 800, lineHeight: 1, marginBottom: 12 }}>{card.icon}</Text>
+        <Text style={{ fontSize: 18, color: '#FFFFFF', fontWeight: 700, marginBottom: 8 }}>{card.title}</Text>
+        <Text style={{ fontSize: 12, color: '#CBD5E1', lineHeight: 1.5 }}>{card.desc}</Text>
+      </Box>
+    ))}
+  </Box>
+
+  {/* Demo access block */}
+  <Box style={{ position: 'absolute', top: 320, left: 60, right: 60, padding: 18, borderRadius: 12, background: 'rgba(6,182,212,0.08)', border: '1px solid rgba(6,182,212,0.3)' }}>
+    <Text style={{ fontSize: 11, color: '#06B6D4', fontWeight: 700, letterSpacing: 1.5, marginBottom: 14 }}>DEMO ACCESS · PLACEHOLDERS</Text>
+
+    <Box style={{ flexDirection: 'row', gap: 16 }}>
+      {/* GitHub */}
+      <Box style={{ flex: 1, padding: 14, borderRadius: 8, background: '#0F172A', border: '1px dashed #475569' }}>
+        <Text style={{ fontSize: 11, color: '#94A3B8', fontWeight: 700, letterSpacing: 1, marginBottom: 4 }}>GITHUB</Text>
+        <Text style={{ fontSize: 13, color: '#06B6D4', fontWeight: 600, fontFamily: 'monospace' }}>https://github.com/[your-org]/GenBuddy_Hackathon</Text>
+        <Text style={{ fontSize: 10, color: '#64748B', marginTop: 4 }}>↳ Replace with actual repo URL before publishing</Text>
+      </Box>
+
+      {/* Deployed app */}
+      <Box style={{ flex: 1, padding: 14, borderRadius: 8, background: '#0F172A', border: '1px dashed #475569' }}>
+        <Text style={{ fontSize: 11, color: '#94A3B8', fontWeight: 700, letterSpacing: 1, marginBottom: 4 }}>DEPLOYED APP</Text>
+        <Text style={{ fontSize: 13, color: '#F59E0B', fontWeight: 600, fontFamily: 'monospace' }}>PENDING DEPLOYMENT</Text>
+        <Text style={{ fontSize: 10, color: '#64748B', marginTop: 4 }}>↳ Public URL will be added once deployed</Text>
+      </Box>
+    </Box>
+  </Box>
+
+  {/* Closing statement */}
+  <Box style={{ position: 'absolute', top: 520, left: 60, right: 60, alignItems: 'center' }}>
+    <Text style={{ fontSize: 20, color: '#FFFFFF', fontWeight: 600, textAlign: 'center', lineHeight: 1.4 }}>
+      Thank you.
+    </Text>
+    <Text style={{ fontSize: 13, color: '#06B6D4', fontWeight: 500, textAlign: 'center', marginTop: 6 }}>
+      Questions welcome. All evidence files are open in the repo: docs/workbuddy_usage_evidence.md · reports/ai_*.md
+    </Text>
+  </Box>
+
+  {/* Footer */}
+  <Box style={{ position: 'absolute', bottom: 28, left: 60, right: 60, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+    <Text style={{ fontSize: 12, color: '#64748B' }}>GenBuddy · DORMATHON 2026 · Track 2: Agentic Solutions</Text>
+    <Text style={{ fontSize: 12, color: '#64748B' }}>10 / 10</Text>
+  </Box>
+</Slide>

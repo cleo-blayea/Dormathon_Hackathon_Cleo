@@ -1,0 +1,119 @@
+<Slide style={{ width: '1280px', height: '720px', padding: 0, background: '#0B1E3F' }}>
+  {/* Top accent bar */}
+  <Box style={{ position: 'absolute', top: 0, left: 0, width: '1280px', height: 6, background: 'linear-gradient(90deg, #06B6D4 0%, #2563EB 100%)' }} />
+
+  {/* Section tag */}
+  <Box style={{ position: 'absolute', top: 28, left: 60, padding: '4px 12px', borderRadius: 4, background: '#06B6D4' }}>
+    <Text style={{ fontSize: 11, color: '#0B1E3F', fontWeight: 700, letterSpacing: 1.5 }}>05 / AGENTIC WORKFLOW</Text>
+  </Box>
+
+  {/* Title */}
+  <Box style={{ position: 'absolute', top: 64, left: 60, width: 1160 }}>
+    <Text style={{ fontSize: 28, color: '#FFFFFF', fontWeight: 700, lineHeight: 1.2 }}>
+      One prompt, one goal, end-to-end execution
+    </Text>
+  </Box>
+
+  {/* Center hero tagline */}
+  <Box style={{ position: 'absolute', top: 110, left: 0, width: '1280px', alignItems: 'center' }}>
+    <Text style={{ fontSize: 11, color: '#06B6D4', fontWeight: 700, letterSpacing: 2 }}>AGENT LOOP</Text>
+  </Box>
+
+  {/* 5-step cycle */}
+  <Box style={{ position: 'absolute', top: 134, left: 60, right: 60, flexDirection: 'row', alignItems: 'flex-start', justifyContent: 'space-between' }}>
+    {[
+      { num: '1', title: 'Plan', desc: 'Build multi-step plan before any tool runs' },
+      { num: '2', title: 'Execute', desc: 'Run validation, scripts, reads, API' },
+      { num: '3', title: 'Check', desc: 'Verify evidence against script findings' },
+      { num: '4', title: 'Reason', desc: 'Distinguish observed vs suspected causes' },
+      { num: '5', title: 'Report', desc: 'Write structured deliverables' },
+    ].map((s, i) => (
+      <Box key={i} style={{ width: 200, alignItems: 'center' }}>
+        <Box style={{ width: 48, height: 48, borderRadius: 24, background: i === 0 ? '#06B6D4' : (i === 4 ? '#2563EB' : '#1E3A8A'), border: '2px solid #06B6D4', alignItems: 'center', justifyContent: 'center' }}>
+          <Text style={{ fontSize: 22, color: '#FFFFFF', fontWeight: 800 }}>{s.num}</Text>
+        </Box>
+        <Text style={{ fontSize: 15, color: '#FFFFFF', fontWeight: 700, marginTop: 6 }}>{s.title}</Text>
+        <Text style={{ fontSize: 10, color: '#94A3B8', marginTop: 3, textAlign: 'center', width: 180 }}>{s.desc}</Text>
+      </Box>
+    ))}
+  </Box>
+
+  {/* Two key panels: planning example + WorkBuddy screenshot placeholder */}
+  <Box style={{ position: 'absolute', top: 252, left: 60, right: 60, flexDirection: 'row', gap: 16 }}>
+    {/* LEFT - Planning example */}
+    <Box style={{ flex: 1, padding: 14, borderRadius: 10, background: 'rgba(6,182,212,0.08)', border: '1px solid rgba(6,182,212,0.3)' }}>
+      <Text style={{ fontSize: 10, color: '#06B6D4', fontWeight: 700, letterSpacing: 1.5, marginBottom: 6 }}>PROOF: 13-STEP PLAN (INVESTIGATION 1)</Text>
+      <Box style={{ flexDirection: 'column', gap: 2 }}>
+        {[
+          'Run validation script',
+          'Run fault investigation',
+          'Read script reports',
+          'Read maintenance history',
+          'Read generator specs',
+          'Read CSV data independently',
+          'Query Flask API for cross-verification',
+          'Examine 12 critical timestamps',
+          'Examine full thermal progression',
+          'Examine full ATS failure sequence',
+          'Cross-scenario comparison',
+          'Battery / fuel health',
+          'Synthesize findings',
+        ].map((step, i) => (
+          <Text key={i} style={{ fontSize: 10, color: '#CBD5E1', lineHeight: 1.3 }}>
+            <span style={{ color: '#06B6D4', fontWeight: 700 }}>{i + 1}.</span> {step}
+          </Text>
+        ))}
+      </Box>
+    </Box>
+
+    {/* RIGHT - WorkBuddy screenshot placeholder + tools */}
+    <Box style={{ flex: 1, padding: 14, borderRadius: 10, background: 'rgba(37,99,235,0.08)', border: '1px solid rgba(37,99,235,0.3)' }}>
+      <Text style={{ fontSize: 10, color: '#60A5FA', fontWeight: 700, letterSpacing: 1.5, marginBottom: 6 }}>WORKBUDDY AGENT IN ACTION</Text>
+
+      {/* Screenshot placeholder */}
+      <Box style={{ height: 180, borderRadius: 8, background: 'rgba(15,23,42,0.5)', border: '2px dashed rgba(96,165,250,0.4)', alignItems: 'center', justifyContent: 'center', marginBottom: 10 }}>
+        <Text style={{ fontSize: 11, color: '#60A5FA', fontWeight: 700, letterSpacing: 1.5, marginBottom: 4 }}>SCREENSHOT PLACEHOLDER</Text>
+        <Text style={{ fontSize: 10, color: '#94A3B8', textAlign: 'center', lineHeight: 1.4 }}>
+          WorkBuddy showing 13-step plan
+          <br />or tool execution (e.g. validate_data.py)
+        </Text>
+      </Box>
+
+      {/* Condensed tool list */}
+      <Box style={{ flexDirection: 'column', gap: 5 }}>
+        <Text style={{ fontSize: 11, color: '#FFFFFF', fontWeight: 600 }}>Python scripts</Text>
+        <Text style={{ fontSize: 9, color: '#94A3B8' }}>validate_data.py · fault_investigation.py</Text>
+        <Text style={{ fontSize: 11, color: '#FFFFFF', fontWeight: 600, marginTop: 2 }}>Direct CSV reads + Flask API queries</Text>
+        <Text style={{ fontSize: 9, color: '#94A3B8' }}>independent verification + cross-check</Text>
+        <Text style={{ fontSize: 11, color: '#FFFFFF', fontWeight: 600, marginTop: 2 }}>Report writes</Text>
+        <Text style={{ fontSize: 9, color: '#94A3B8' }}>7 AI reports · Markdown deliverables</Text>
+      </Box>
+    </Box>
+  </Box>
+
+  {/* Bottom hero metric row */}
+  <Box style={{ position: 'absolute', bottom: 56, left: 60, right: 60, flexDirection: 'row', justifyContent: 'space-around', alignItems: 'center', padding: 12, borderRadius: 10, background: 'rgba(6,182,212,0.05)' }}>
+    <Box style={{ alignItems: 'center' }}>
+      <Text style={{ fontSize: 28, color: '#06B6D4', fontWeight: 800, lineHeight: 1 }}>13</Text>
+      <Text style={{ fontSize: 10, color: '#94A3B8', marginTop: 4 }}>planned steps (Inv 1)</Text>
+    </Box>
+    <Box style={{ alignItems: 'center' }}>
+      <Text style={{ fontSize: 28, color: '#06B6D4', fontWeight: 800, lineHeight: 1 }}>20</Text>
+      <Text style={{ fontSize: 10, color: '#94A3B8', marginTop: 4 }}>tool calls (Inv 1)</Text>
+    </Box>
+    <Box style={{ alignItems: 'center' }}>
+      <Text style={{ fontSize: 28, color: '#06B6D4', fontWeight: 800, lineHeight: 1 }}>3</Text>
+      <Text style={{ fontSize: 10, color: '#94A3B8', marginTop: 4 }}>investigations</Text>
+    </Box>
+    <Box style={{ alignItems: 'center' }}>
+      <Text style={{ fontSize: 28, color: '#06B6D4', fontWeight: 800, lineHeight: 1 }}>7</Text>
+      <Text style={{ fontSize: 10, color: '#94A3B8', marginTop: 4 }}>AI-generated reports</Text>
+    </Box>
+  </Box>
+
+  {/* Footer */}
+  <Box style={{ position: 'absolute', bottom: 20, left: 60, right: 60, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+    <Text style={{ fontSize: 11, color: '#64748B' }}>GenBuddy · DORMATHON 2026 · Track 2: Agentic Solutions</Text>
+    <Text style={{ fontSize: 11, color: '#64748B' }}>05 / 10</Text>
+  </Box>
+</Slide>

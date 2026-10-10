@@ -22,6 +22,7 @@ Checks the generated CSV files for:
 import csv
 import math
 import os
+import sys
 from datetime import datetime
 
 DATA_DIR = os.environ.get("GENBUDDY_DATA_DIR",
@@ -637,6 +638,11 @@ def main():
     print(f"Issues: {len(issues)}, Warnings: {len(warnings)}")
     for line in info:
         print(f"  {line}")
+
+    # Exit code: 0 = pass (no issues), 1 = issues found
+    # This allows callers to detect validation failures via exit code
+    # rather than parsing stdout text.
+    sys.exit(1 if issues else 0)
 
 
 if __name__ == "__main__":

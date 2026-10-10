@@ -1,0 +1,118 @@
+<Slide style={{ width: '1280px', height: '720px', padding: 0, background: '#F8FAFC' }}>
+  {/* Top accent bar */}
+  <Box style={{ position: 'absolute', top: 0, left: 0, width: '1280px', height: 6, background: 'linear-gradient(90deg, #0B1E3F 0%, #2563EB 100%)' }} />
+
+  {/* Section tag */}
+  <Box style={{ position: 'absolute', top: 32, left: 60, padding: '4px 12px', borderRadius: 4, background: '#0B1E3F' }}>
+    <Text style={{ fontSize: 11, color: '#FFFFFF', fontWeight: 700, letterSpacing: 1.5 }}>03 / OUR SOLUTION</Text>
+  </Box>
+
+  {/* Title */}
+  <Box style={{ position: 'absolute', top: 64, left: 60, width: 1160 }}>
+    <Text style={{ fontSize: 30, color: '#0B1E3F', fontWeight: 700, lineHeight: 1.2 }}>
+      GenBuddy turns raw signals into readiness and action
+    </Text>
+  </Box>
+
+  {/* Three-step horizontal flow */}
+  <Box style={{ position: 'absolute', top: 140, left: 60, right: 60, flexDirection: 'row', alignItems: 'stretch', gap: 16 }}>
+    {/* Step 1 - INPUTS */}
+    <Box style={{ flex: 1, padding: 20, borderRadius: 12, background: '#FFFFFF', border: '1px solid #E2E8F0' }}>
+      <Box style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 16 }}>
+        <Box style={{ width: 32, height: 32, borderRadius: 16, background: '#0B1E3F', alignItems: 'center', justifyContent: 'center' }}>
+          <Text style={{ fontSize: 14, color: '#FFFFFF', fontWeight: 700 }}>1</Text>
+        </Box>
+        <Text style={{ fontSize: 11, color: '#06B6D4', fontWeight: 700, letterSpacing: 1.5, marginLeft: 12 }}>INPUTS</Text>
+      </Box>
+      <Text style={{ fontSize: 18, color: '#0F172A', fontWeight: 700, marginBottom: 12 }}>Existing generator data</Text>
+      <Box style={{ flexDirection: 'column', gap: 8 }}>
+        <Text style={{ fontSize: 13, color: '#475569' }}>
+          <span style={{ color: '#2563EB', fontWeight: 700 }}>·</span> Telemetry (176 records, 13 params)
+        </Text>
+        <Text style={{ fontSize: 13, color: '#475569' }}>
+          <span style={{ color: '#2563EB', fontWeight: 700 }}>·</span> ATS event log (176 records)
+        </Text>
+        <Text style={{ fontSize: 13, color: '#475569' }}>
+          <span style={{ color: '#2563EB', fontWeight: 700 }}>·</span> Maintenance history (4 records)
+        </Text>
+      </Box>
+    </Box>
+
+    {/* Arrow 1 */}
+    <Box style={{ width: 32, alignItems: 'center', justifyContent: 'center' }}>
+      <Text style={{ fontSize: 32, color: '#2563EB', fontWeight: 700 }}>→</Text>
+    </Box>
+
+    {/* Step 2 - GENBUDDY AI */}
+    <Box style={{ flex: 1.3, padding: 20, borderRadius: 12, background: 'linear-gradient(135deg, #0B1E3F 0%, #1E40AF 100%)' }}>
+      <Box style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 16 }}>
+        <Box style={{ width: 32, height: 32, borderRadius: 16, background: '#06B6D4', alignItems: 'center', justifyContent: 'center' }}>
+          <Text style={{ fontSize: 14, color: '#0B1E3F', fontWeight: 700 }}>2</Text>
+        </Box>
+        <Text style={{ fontSize: 11, color: '#06B6D4', fontWeight: 700, letterSpacing: 1.5, marginLeft: 12 }}>AI INVESTIGATION</Text>
+      </Box>
+      <Text style={{ fontSize: 18, color: '#FFFFFF', fontWeight: 700, marginBottom: 12 }}>WorkBuddy LLM agent</Text>
+      <Box style={{ flexDirection: 'column', gap: 6 }}>
+        <Text style={{ fontSize: 13, color: '#CBD5E1' }}>
+          <span style={{ color: '#06B6D4', fontWeight: 700 }}>·</span> Plans a multi-step investigation
+        </Text>
+        <Text style={{ fontSize: 13, color: '#CBD5E1' }}>
+          <span style={{ color: '#06B6D4', fontWeight: 700 }}>·</span> Runs engineering tools
+        </Text>
+        <Text style={{ fontSize: 13, color: '#CBD5E1' }}>
+          <span style={{ color: '#06B6D4', fontWeight: 700 }}>·</span> Reads raw data independently
+        </Text>
+        <Text style={{ fontSize: 13, color: '#CBD5E1' }}>
+          <span style={{ color: '#06B6D4', fontWeight: 700 }}>·</span> Reasons about uncertainties
+        </Text>
+        <Text style={{ fontSize: 13, color: '#CBD5E1' }}>
+          <span style={{ color: '#06B6D4', fontWeight: 700 }}>·</span> Writes structured reports
+        </Text>
+      </Box>
+    </Box>
+
+    {/* Arrow 2 */}
+    <Box style={{ width: 32, alignItems: 'center', justifyContent: 'center' }}>
+      <Text style={{ fontSize: 32, color: '#2563EB', fontWeight: 700 }}>→</Text>
+    </Box>
+
+    {/* Step 3 - OUTPUTS */}
+    <Box style={{ flex: 1, padding: 20, borderRadius: 12, background: '#FFFFFF', border: '1px solid #E2E8F0' }}>
+      <Box style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 16 }}>
+        <Box style={{ width: 32, height: 32, borderRadius: 16, background: '#06B6D4', alignItems: 'center', justifyContent: 'center' }}>
+          <Text style={{ fontSize: 14, color: '#0B1E3F', fontWeight: 700 }}>3</Text>
+        </Box>
+        <Text style={{ fontSize: 11, color: '#06B6D4', fontWeight: 700, letterSpacing: 1.5, marginLeft: 12 }}>OUTPUTS</Text>
+      </Box>
+      <Text style={{ fontSize: 18, color: '#0F172A', fontWeight: 700, marginBottom: 12 }}>Actionable insights</Text>
+      <Box style={{ flexDirection: 'column', gap: 8 }}>
+        <Text style={{ fontSize: 13, color: '#475569' }}>
+          <span style={{ color: '#2563EB', fontWeight: 700 }}>·</span> Readiness verdict (READY / NOT READY)
+        </Text>
+        <Text style={{ fontSize: 13, color: '#475569' }}>
+          <span style={{ color: '#2563EB', fontWeight: 700 }}>·</span> Prioritized work orders
+        </Text>
+        <Text style={{ fontSize: 13, color: '#475569' }}>
+          <span style={{ color: '#2563EB', fontWeight: 700 }}>·</span> Root-cause timelines
+        </Text>
+        <Text style={{ fontSize: 13, color: '#475569' }}>
+          <span style={{ color: '#2563EB', fontWeight: 700 }}>·</span> Contractor briefings
+        </Text>
+      </Box>
+    </Box>
+  </Box>
+
+  {/* Key benefit statement */}
+  <Box style={{ position: 'absolute', bottom: 110, left: 60, right: 60, padding: 18, borderRadius: 12, background: '#FFFFFF', border: '1px solid #E2E8F0', borderLeft: '4px solid #06B6D4' }}>
+    <Text style={{ fontSize: 14, color: '#94A3B8', fontWeight: 700, letterSpacing: 1.5, marginBottom: 6 }}>BUSINESS OUTCOME</Text>
+    <Text style={{ fontSize: 18, color: '#0F172A', fontWeight: 600, lineHeight: 1.5 }}>
+      A small business owner asks a plain-English question, and the agent returns a prioritized maintenance plan with evidence — ready for a qualified specialist to act on.
+    </Text>
+  </Box>
+
+  {/* Footer */}
+  <Box style={{ position: 'absolute', bottom: 32, left: 60, right: 60, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+    <Text style={{ fontSize: 12, color: '#64748B' }}>GenBuddy · DORMATHON 2026 · Track 2: Agentic Solutions</Text>
+    <Text style={{ fontSize: 12, color: '#64748B' }}>03 / 10</Text>
+  </Box>
+</Slide>

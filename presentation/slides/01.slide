@@ -38,7 +38,7 @@
   <Box style={{ position: 'absolute', bottom: 110, left: 60, flexDirection: 'row', gap: 56 }}>
     <Box>
       <Text style={{ fontSize: 36, color: '#06B6D4', fontWeight: 800, lineHeight: 1 }}>356</Text>
-      <Text style={{ fontSize: 12, color: '#94A3B8', marginTop: 4 }}>Telemetry records</Text>
+      <Text style={{ fontSize: 12, color: '#94A3B8', marginTop: 4 }}>Dataset records</Text>
     </Box>
     <Box>
       <Text style={{ fontSize: 36, color: '#06B6D4', fontWeight: 800, lineHeight: 1 }}>3</Text>

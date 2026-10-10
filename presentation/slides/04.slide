@@ -1,0 +1,135 @@
+<Slide style={{ width: '1280px', height: '720px', padding: 0, background: '#F8FAFC' }}>
+  {/* Top accent bar */}
+  <Box style={{ position: 'absolute', top: 0, left: 0, width: '1280px', height: 6, background: 'linear-gradient(90deg, #0B1E3F 0%, #2563EB 100%)' }} />
+
+  {/* Section tag */}
+  <Box style={{ position: 'absolute', top: 32, left: 60, padding: '4px 12px', borderRadius: 4, background: '#0B1E3F' }}>
+    <Text style={{ fontSize: 11, color: '#FFFFFF', fontWeight: 700, letterSpacing: 1.5 }}>04 / ARCHITECTURE</Text>
+  </Box>
+
+  {/* Title */}
+  <Box style={{ position: 'absolute', top: 64, left: 60, width: 1160 }}>
+    <Text style={{ fontSize: 28, color: '#0B1E3F', fontWeight: 700, lineHeight: 1.2 }}>
+      System architecture: deterministic engineering meets AI reasoning
+    </Text>
+  </Box>
+
+  {/* Two-column split */}
+  <Box style={{ position: 'absolute', top: 140, left: 60, right: 60, flexDirection: 'row', gap: 16 }}>
+    {/* LEFT - Deterministic Engineering */}
+    <Box style={{ flex: 1, padding: 16, borderRadius: 12, background: '#FFFFFF', border: '1px solid #E2E8F0' }}>
+      <Box style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 12 }}>
+        <Box style={{ width: 28, height: 28, borderRadius: 6, background: '#2563EB', alignItems: 'center', justifyContent: 'center' }}>
+          <Text style={{ fontSize: 12, color: '#FFFFFF', fontWeight: 700 }}>E</Text>
+        </Box>
+        <Text style={{ fontSize: 11, color: '#2563EB', fontWeight: 700, letterSpacing: 1.5, marginLeft: 8 }}>DETERMINISTIC ENGINEERING</Text>
+      </Box>
+
+      <Box style={{ flexDirection: 'column', gap: 8 }}>
+        {/* Flask Dashboard */}
+        <Box style={{ padding: 10, borderRadius: 6, background: '#F1F5F9', borderLeft: '3px solid #2563EB' }}>
+          <Text style={{ fontSize: 13, color: '#0F172A', fontWeight: 700 }}>Flask Dashboard</Text>
+          <Text style={{ fontSize: 11, color: '#64748B', marginTop: 2 }}>app.py · 12 API endpoints · templates/index.html</Text>
+        </Box>
+
+        {/* Scripts */}
+        <Box style={{ padding: 10, borderRadius: 6, background: '#F1F5F9', borderLeft: '3px solid #2563EB' }}>
+          <Text style={{ fontSize: 13, color: '#0F172A', fontWeight: 700 }}>Engineering Scripts</Text>
+          <Text style={{ fontSize: 11, color: '#64748B', marginTop: 2 }}>validate_data.py (13 checks) · fault_investigation.py</Text>
+        </Box>
+
+        {/* Data Files */}
+        <Box style={{ padding: 10, borderRadius: 6, background: '#F1F5F9', borderLeft: '3px solid #2563EB' }}>
+          <Text style={{ fontSize: 13, color: '#0F172A', fontWeight: 700 }}>CSV Data Sources</Text>
+          <Text style={{ fontSize: 11, color: '#64748B', marginTop: 2 }}>generator_data.csv · ats_events.csv · maintenance_history.csv</Text>
+        </Box>
+
+        {/* Request System */}
+        <Box style={{ padding: 10, borderRadius: 6, background: '#F1F5F9', borderLeft: '3px solid #2563EB' }}>
+          <Text style={{ fontSize: 13, color: '#0F172A', fontWeight: 700 }}>Request / Output</Text>
+          <Text style={{ fontSize: 11, color: '#64748B', marginTop: 2 }}>JSON files in requests/ · reports in outputs/</Text>
+        </Box>
+      </Box>
+
+      <Box style={{ marginTop: 12, padding: 8, borderRadius: 6, background: '#DBEAFE' }}>
+        <Text style={{ fontSize: 11, color: '#1E40AF', fontWeight: 600 }}>
+          ✓ Reproducible · testable · version-controlled
+        </Text>
+      </Box>
+    </Box>
+
+    {/* RIGHT - WorkBuddy AI Agent */}
+    <Box style={{ flex: 1, padding: 16, borderRadius: 12, background: 'linear-gradient(135deg, #0B1E3F 0%, #1E3A8A 100%)' }}>
+      <Box style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 12 }}>
+        <Box style={{ width: 28, height: 28, borderRadius: 6, background: '#06B6D4', alignItems: 'center', justifyContent: 'center' }}>
+          <Text style={{ fontSize: 12, color: '#0B1E3F', fontWeight: 700 }}>AI</Text>
+        </Box>
+        <Text style={{ fontSize: 11, color: '#06B6D4', fontWeight: 700, letterSpacing: 1.5, marginLeft: 8 }}>WORKBUDDY LLM AGENT</Text>
+      </Box>
+
+      <Box style={{ flexDirection: 'column', gap: 8 }}>
+        <Box style={{ padding: 10, borderRadius: 6, background: 'rgba(6,182,212,0.12)', borderLeft: '3px solid #06B6D4' }}>
+          <Text style={{ fontSize: 13, color: '#FFFFFF', fontWeight: 700 }}>Plan</Text>
+          <Text style={{ fontSize: 11, color: '#CBD5E1', marginTop: 2 }}>Builds a multi-step plan before executing</Text>
+        </Box>
+
+        <Box style={{ padding: 10, borderRadius: 6, background: 'rgba(6,182,212,0.12)', borderLeft: '3px solid #06B6D4' }}>
+          <Text style={{ fontSize: 13, color: '#FFFFFF', fontWeight: 700 }}>Execute Tools</Text>
+          <Text style={{ fontSize: 11, color: '#CBD5E1', marginTop: 2 }}>Runs scripts, reads CSVs, queries API</Text>
+        </Box>
+
+        <Box style={{ padding: 10, borderRadius: 6, background: 'rgba(6,182,212,0.12)', borderLeft: '3px solid #06B6D4' }}>
+          <Text style={{ fontSize: 13, color: '#FFFFFF', fontWeight: 700 }}>Reason</Text>
+          <Text style={{ fontSize: 11, color: '#CBD5E1', marginTop: 2 }}>Distinguishes observed facts from suspected causes</Text>
+        </Box>
+
+        <Box style={{ padding: 10, borderRadius: 6, background: 'rgba(6,182,212,0.12)', borderLeft: '3px solid #06B6D4' }}>
+          <Text style={{ fontSize: 13, color: '#FFFFFF', fontWeight: 700 }}>Write Reports</Text>
+          <Text style={{ fontSize: 11, color: '#CBD5E1', marginTop: 2 }}>Outputs structured Markdown files for review</Text>
+        </Box>
+      </Box>
+
+      <Box style={{ marginTop: 12, padding: 8, borderRadius: 6, background: 'rgba(6,182,212,0.18)' }}>
+        <Text style={{ fontSize: 11, color: '#06B6D4', fontWeight: 600 }}>
+          ✓ Adaptive · investigative · auditable
+        </Text>
+      </Box>
+    </Box>
+  </Box>
+
+  {/* Bottom flow */}
+  <Box style={{ position: 'absolute', bottom: 80, left: 60, right: 60, padding: 12, borderRadius: 12, background: '#0B1E3F' }}>
+    <Box style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
+      <Box style={{ alignItems: 'center' }}>
+        <Text style={{ fontSize: 11, color: '#06B6D4', fontWeight: 700, letterSpacing: 1.5 }}>FLOW</Text>
+        <Text style={{ fontSize: 14, color: '#FFFFFF', fontWeight: 700, marginTop: 4 }}>User question</Text>
+      </Box>
+      <Text style={{ fontSize: 24, color: '#06B6D4' }}>→</Text>
+      <Box style={{ alignItems: 'center' }}>
+        <Text style={{ fontSize: 11, color: '#06B6D4', fontWeight: 700, letterSpacing: 1.5 }}>FILE</Text>
+        <Text style={{ fontSize: 14, color: '#FFFFFF', fontWeight: 700, marginTop: 4 }}>JSON request</Text>
+      </Box>
+      <Text style={{ fontSize: 24, color: '#06B6D4' }}>→</Text>
+      <Box style={{ alignItems: 'center' }}>
+        <Text style={{ fontSize: 11, color: '#06B6D4', fontWeight: 700, letterSpacing: 1.5 }}>MANUAL</Text>
+        <Text style={{ fontSize: 14, color: '#FFFFFF', fontWeight: 700, marginTop: 4 }}>Paste to WorkBuddy</Text>
+      </Box>
+      <Text style={{ fontSize: 24, color: '#06B6D4' }}>→</Text>
+      <Box style={{ alignItems: 'center' }}>
+        <Text style={{ fontSize: 11, color: '#06B6D4', fontWeight: 700, letterSpacing: 1.5 }}>AGENT</Text>
+        <Text style={{ fontSize: 14, color: '#FFFFFF', fontWeight: 700, marginTop: 4 }}>Plan + investigate</Text>
+      </Box>
+      <Text style={{ fontSize: 24, color: '#06B6D4' }}>→</Text>
+      <Box style={{ alignItems: 'center' }}>
+        <Text style={{ fontSize: 11, color: '#06B6D4', fontWeight: 700, letterSpacing: 1.5 }}>OUTPUT</Text>
+        <Text style={{ fontSize: 14, color: '#FFFFFF', fontWeight: 700, marginTop: 4 }}>Reports in dashboard</Text>
+      </Box>
+    </Box>
+  </Box>
+
+  {/* Footer */}
+  <Box style={{ position: 'absolute', bottom: 32, left: 60, right: 60, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+    <Text style={{ fontSize: 12, color: '#64748B' }}>GenBuddy · DORMATHON 2026 · Track 2: Agentic Solutions</Text>
+    <Text style={{ fontSize: 12, color: '#64748B' }}>04 / 10</Text>
+  </Box>
+</Slide>

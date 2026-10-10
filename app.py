@@ -37,7 +37,11 @@ OUTPUTS_DIR = os.path.join(BASE, "outputs")
 # ── Public Demo Mode ──────────────────────────────────────────────────
 # When True, all write-producing and script-executing endpoints are
 # disabled (return 403). Local request/output files are not exposed.
-PUBLIC_DEMO_MODE = os.environ.get("PUBLIC_DEMO_MODE", "0") == "1"
+# Auto-enabled when PORT is set (deployment sandbox) unless explicitly
+# overridden with PUBLIC_DEMO_MODE=0.
+_port_set = bool(os.environ.get("PORT"))
+_explicit = os.environ.get("PUBLIC_DEMO_MODE")
+PUBLIC_DEMO_MODE = _explicit == "1" or (_port_set and _explicit != "0")
 
 # Ensure request/output directories exist at startup (local mode only)
 if not PUBLIC_DEMO_MODE:

@@ -75,7 +75,12 @@ def load_csv(path):
 # STEP 1: VALIDATION
 # ═══════════════════════════════════════════════════════════════════════
 def run_validation():
-    """Run the existing validate_data.py and capture results."""
+    """Run the existing validate_data.py and capture results.
+
+    validate_data.py exits 0 when validation passes (0 issues) and exits
+    nonzero when issues are found. A nonzero exit code means issues were
+    detected — it is NOT a script crash. We capture and continue regardless.
+    """
     log("STEP 1: Running validation (scripts/validate_data.py)")
     py = sys.executable
     result = subprocess.run(
@@ -83,8 +88,12 @@ def run_validation():
         capture_output=True, text=True, timeout=60
     )
     output = result.stdout
-    has_issues = "Issues: 0," not in output
+    # Exit code 0 = pass; nonzero = issues found (NOT a crash)
+    has_issues = result.returncode != 0
     log(f"  Validation exit code: {result.returncode}")
+
+    if result.stderr.strip():
+        log(f"  stderr: {result.stderr.strip()[:200]}")
 
     # Parse summary
     for line in output.splitlines():
@@ -384,8 +393,18 @@ def analyze_scenario_c(gen_rows, ats_rows, failure_ts):
     """Scenario C: Generator starts but ATS fails to confirm transfer."""
     log("STEP 3c: Analyzing Scenario C — Unsuccessful ATS transfer")
 
-    window_ats = [r for r in ats_rows if r["timestamp"] >= failure_ts]
-    window_gen = [r for r in gen_rows if r["timestamp"] >= failure_ts]
+    # Bound this scenario's window to its own utility-failure period
+    # (same pattern as analyze_scenario_a and analyze_scenario_b)
+    failures = find_utility_failures(ats_rows)
+    next_failure = None
+    for f in failures:
+        if f > failure_ts:
+            next_failure = f
+            break
+    window_ats = [r for r in ats_rows if r["timestamp"] >= failure_ts
+                  and (next_failure is None or r["timestamp"] < next_failure)]
+    window_gen = [r for r in gen_rows if r["timestamp"] >= failure_ts
+                  and (next_failure is None or r["timestamp"] < next_failure)]
 
     # Generator started successfully?
     gen_running = next((r for r in window_ats

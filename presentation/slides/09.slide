@@ -1,0 +1,112 @@
+<Slide style={{ width: '1280px', height: '720px', padding: 0, background: '#F8FAFC' }}>
+  {/* Top accent bar */}
+  <Box style={{ position: 'absolute', top: 0, left: 0, width: '1280px', height: 6, background: 'linear-gradient(90deg, #0B1E3F 0%, #2563EB 100%)' }} />
+
+  {/* Section tag */}
+  <Box style={{ position: 'absolute', top: 28, left: 60, padding: '4px 12px', borderRadius: 4, background: '#0B1E3F' }}>
+    <Text style={{ fontSize: 11, color: '#FFFFFF', fontWeight: 700, letterSpacing: 1.5 }}>09 / VALUE &amp; LIMITATIONS</Text>
+  </Box>
+
+  {/* Title */}
+  <Box style={{ position: 'absolute', top: 64, left: 60, width: 1160 }}>
+    <Text style={{ fontSize: 28, color: '#0B1E3F', fontWeight: 700, lineHeight: 1.2 }}>
+      What we proved — and what we didn't
+    </Text>
+  </Box>
+
+  {/* LEFT - Value */}
+  <Box style={{ position: 'absolute', top: 130, left: 60, width: 580, height: 470, padding: 16, borderRadius: 12, background: '#FFFFFF', border: '1px solid #E2E8F0', borderTop: '6px solid #10B981' }}>
+    <Text style={{ fontSize: 11, color: '#10B981', fontWeight: 700, letterSpacing: 1.5, marginBottom: 8 }}>VERIFIED PROTOTYPE RESULTS</Text>
+    <Text style={{ fontSize: 20, color: '#0F172A', fontWeight: 700, marginBottom: 16 }}>What GenBuddy could do</Text>
+
+    <Box style={{ flexDirection: 'column', gap: 12 }}>
+      {[
+        {
+          title: 'Translate telemetry into plain-English flags',
+          desc: '"11 failed ATS transfers" + "0A load current" → flagged for specialist investigation.',
+        },
+        {
+          title: 'Prioritize maintenance by business impact',
+          desc: 'CRITICAL · HIGH · INFORMATIONAL tags based on actual failure modes.',
+        },
+        {
+          title: 'Speak contractor fluently',
+          desc: 'Generates plain-language briefings with specific check instructions.',
+        },
+        {
+          title: 'Reason across scenarios',
+          desc: 'Cross-scenario comparison that fixed-temperature scripts cannot do.',
+        },
+        {
+          title: 'Self-correct during investigation',
+          desc: 'Agent fixed a temperature rise rate error in 3 report files.',
+        },
+      ].map((v, i) => (
+        <Box key={i} style={{ flexDirection: 'row', alignItems: 'flex-start' }}>
+          <Box style={{ width: 24, height: 24, borderRadius: 12, background: '#D1FAE5', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+            <Text style={{ fontSize: 14, color: '#059669', fontWeight: 700 }}>+</Text>
+          </Box>
+          <Box style={{ marginLeft: 12, flex: 1 }}>
+            <Text style={{ fontSize: 13, color: '#0F172A', fontWeight: 700 }}>{v.title}</Text>
+            <Text style={{ fontSize: 11, color: '#64748B', marginTop: 2, lineHeight: 1.4 }}>{v.desc}</Text>
+          </Box>
+        </Box>
+      ))}
+    </Box>
+  </Box>
+
+  {/* RIGHT - Limitations */}
+  <Box style={{ position: 'absolute', top: 130, left: 660, width: 560, height: 470, padding: 16, borderRadius: 12, background: '#FFFFFF', border: '1px solid #E2E8F0', borderTop: '6px solid #F59E0B' }}>
+    <Text style={{ fontSize: 11, color: '#F59E0B', fontWeight: 700, letterSpacing: 1.5, marginBottom: 8 }}>HONEST LIMITATIONS</Text>
+    <Text style={{ fontSize: 20, color: '#0F172A', fontWeight: 700, marginBottom: 16 }}>What we did not prove</Text>
+
+    <Box style={{ flexDirection: 'column', gap: 12 }}>
+      {[
+        {
+          title: 'No physical equipment connection',
+          desc: 'All data is simulated. DSE6120 thresholds are UNVERIFIED.',
+        },
+        {
+          title: 'No validated real-world cost savings',
+          desc: 'No customer case studies; no measured downtime reduction.',
+        },
+        {
+          title: 'Manual WorkBuddy triggering',
+          desc: 'User copies question from dashboard to WorkBuddy. No direct API.',
+        },
+        {
+          title: 'Single-user, local runtime',
+          desc: 'File-based request system. No auth, no multi-user isolation.',
+        },
+        {
+          title: 'Open investigation topics remain',
+          desc: 'DSE6120 thresholds · ambient temp · ATS manufacturer specs.',
+        },
+      ].map((v, i) => (
+        <Box key={i} style={{ flexDirection: 'row', alignItems: 'flex-start' }}>
+          <Box style={{ width: 24, height: 24, borderRadius: 12, background: '#FEF3C7', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+            <Text style={{ fontSize: 14, color: '#B45309', fontWeight: 700 }}>!</Text>
+          </Box>
+          <Box style={{ marginLeft: 12, flex: 1 }}>
+            <Text style={{ fontSize: 13, color: '#0F172A', fontWeight: 700 }}>{v.title}</Text>
+            <Text style={{ fontSize: 11, color: '#64748B', marginTop: 2, lineHeight: 1.4 }}>{v.desc}</Text>
+          </Box>
+        </Box>
+      ))}
+    </Box>
+  </Box>
+
+  {/* Bottom honesty badge */}
+  <Box style={{ position: 'absolute', bottom: 70, left: 60, right: 60, padding: 10, borderRadius: 10, background: '#0B1E3F', flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
+    <Text style={{ fontSize: 13, color: '#06B6D4', fontWeight: 700, letterSpacing: 1.5, marginRight: 12 }}>TRACK 2 PRINCIPLE</Text>
+    <Text style={{ fontSize: 13, color: '#FFFFFF', fontWeight: 600 }}>
+      Show genuine WorkBuddy usage, not marketing claims.
+    </Text>
+  </Box>
+
+  {/* Footer */}
+  <Box style={{ position: 'absolute', bottom: 28, left: 60, right: 60, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+    <Text style={{ fontSize: 12, color: '#64748B' }}>GenBuddy · DORMATHON 2026 · Track 2: Agentic Solutions</Text>
+    <Text style={{ fontSize: 12, color: '#64748B' }}>09 / 10</Text>
+  </Box>
+</Slide>

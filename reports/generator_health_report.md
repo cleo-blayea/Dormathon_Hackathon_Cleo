@@ -2,7 +2,7 @@
 
 > **DISCLAIMER:** All data is SIMULATED. No real equipment connected. DSE6120 alarm thresholds remain UNVERIFIED.
 
-**Generated:** 2026-10-10 20:01:40
+**Generated:** 2026-10-10 21:47:23
 
 **Reference Generator:** AI Power ASC344 — 344 kVA / 275 kW, 400/230V, 50Hz
 

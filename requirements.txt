@@ -1,0 +1,8 @@
+# GenBuddy - Python dependencies
+# DORMATHON 2026 Track 2
+
+# Web framework
+Flask==3.0.3
+
+# Production WSGI server (used when PUBLIC_DEMO_MODE=1)
+waitress==3.0.0

@@ -1,0 +1,44 @@
+{
+  "_disclaimer": "SIMULATED DATA ONLY. This file does not represent real generator operation. No real equipment is connected or controlled.",
+  "generator": {
+    "manufacturer": "AI Power",
+    "model": "ASC344",
+    "application": "Simulated standby generator at a commercial facility in Sarawak, Malaysia",
+    "standby_rating_kVA": 344,
+    "standby_rating_kW": 275,
+    "output_voltage_LL": 400,
+    "output_voltage_LN": 230,
+    "phases": 3,
+    "frequency_Hz": 50,
+    "power_factor": 0.8,
+    "engine": {
+      "manufacturer": "SDEC",
+      "model": "SC13G420D2",
+      "speed_rpm": 1500,
+      "starting_battery_V": 24
+    },
+    "fuel_tank_capacity_L": 522,
+    "controller": {
+      "manufacturer": "Deep Sea Electronics",
+      "model": "DSE6120"
+    }
+  },
+  "fuel_consumption_L_per_h": {
+    "25_percent_load": 15.8,
+    "50_percent_load": 31.6,
+    "75_percent_load": 47.1,
+    "100_percent_load": 65.2
+  },
+  "electrical_constants": {
+    "sqrt3": 1.7320508,
+    "full_load_current_A": 496.55,
+    "note": "I = S / (sqrt(3) * V_LL) = 344000 / (1.7320508 * 400)"
+  },
+  "warning_limits_status": {
+    "coolant_temperature": "UNVERIFIED - manufacturer settings not yet available",
+    "oil_pressure": "UNVERIFIED - manufacturer settings not yet available",
+    "battery_voltage": "UNVERIFIED - manufacturer settings not yet available"
+  },
+  "simulation_only": true,
+  "connected_to_real_equipment": false
+}

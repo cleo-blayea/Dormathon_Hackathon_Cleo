@@ -1,0 +1,40 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.egg-info/
+dist/
+build/
+
+# Virtual environments
+venv/
+.venv/
+env/
+
+# Environment variables / secrets
+.env
+.env.*
+
+# Local runtime artifacts (request system)
+requests/
+outputs/
+
+# Test artifacts (not part of the published project)
+test_data/
+test_reports/
+scripts/test_playback.js
+scripts/test_autonomous.py
+
+# IDE / editor
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# WorkBuddy local data (never publish)
+.workbuddy-ai/

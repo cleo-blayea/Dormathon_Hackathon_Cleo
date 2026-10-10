@@ -1,0 +1,5 @@
+maintenance_date,running_hours,maintenance_type,work_description,next_inspection_date
+2025-11-15,500.0,Routine (250h),"Oil and filter change, battery load test, coolant level check",2026-02-15
+2026-02-10,750.0,Routine (500h),"Oil change, fuel filter replacement, air filter cleaning, alternator inspection",2026-05-10
+2026-05-20,1000.0,Major (1000h),"Full service: all filters, valve clearance adjustment, injector inspection, controller firmware update",2026-08-20
+2026-08-15,1250.0,Routine (250h),"Oil and filter change, battery replacement (24V), radiator cleaning, ATS contact inspection",2026-11-15

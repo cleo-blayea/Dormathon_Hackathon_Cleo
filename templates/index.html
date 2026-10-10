@@ -1,0 +1,1418 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GenBuddy -- Generator Monitoring Dashboard</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Arial, sans-serif;
+            background: #f0f2f5; color: #1a1a2e;
+        }
+        .header {
+            background: linear-gradient(135deg, #1a1a2e, #16213e);
+            color: #fff; padding: 16px 24px; display: flex;
+            justify-content: space-between; align-items: center;
+        }
+        .header h1 { font-size: 1.5rem; }
+        .header .badge {
+            background: #e74c3c; color: #fff; padding: 4px 12px;
+            border-radius: 12px; font-size: 0.75rem; font-weight: 700;
+        }
+        .header .info { font-size: 0.8rem; color: #adb5bd; }
+        .container { max-width: 1400px; margin: 0 auto; padding: 20px; }
+
+        /* Simulated data banner */
+        .sim-banner {
+            background: #fff3cd; border: 1px solid #ffeaa7; border-left: 4px solid #f39c12;
+            border-radius: 8px; padding: 10px 16px; margin-bottom: 16px;
+            font-size: 0.85rem; color: #856404; display: flex; align-items: center; gap: 8px;
+        }
+        .sim-banner .icon { font-size: 1.1rem; }
+
+        /* Playback bar */
+        .playback-bar {
+            background: #fff; border-radius: 10px; padding: 16px 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08); margin-bottom: 20px;
+            border-left: 4px solid #0984e3;
+        }
+        .playback-header {
+            display: flex; justify-content: space-between; align-items: center;
+            margin-bottom: 12px;
+        }
+        .playback-label {
+            font-size: 0.8rem; color: #0984e3; font-weight: 700;
+            text-transform: uppercase; letter-spacing: 0.5px;
+        }
+        .playback-controls {
+            display: flex; align-items: center; gap: 12px;
+        }
+        .pb-btn {
+            padding: 8px 14px; border-radius: 6px; border: 1px solid #ced4da;
+            font-size: 1.1rem; cursor: pointer; background: #fff; min-width: 44px;
+            text-align: center; transition: background 0.15s;
+        }
+        .pb-btn:hover { background: #e8f4fd; border-color: #0984e3; }
+        .pb-btn:active { transform: scale(0.95); }
+        #timeSlider {
+            flex: 1; height: 6px; -webkit-appearance: none; appearance: none;
+            background: #d0d7de; border-radius: 3px; cursor: pointer; outline: none;
+        }
+        #timeSlider::-webkit-slider-thumb {
+            -webkit-appearance: none; appearance: none;
+            width: 18px; height: 18px; border-radius: 50%;
+            background: #0984e3; cursor: pointer; border: 2px solid #fff;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.3);
+        }
+        #timeSlider::-moz-range-thumb {
+            width: 18px; height: 18px; border-radius: 50%;
+            background: #0984e3; cursor: pointer; border: 2px solid #fff;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.3);
+        }
+        .timestamp-display {
+            font-size: 1.1rem; font-weight: 700; color: #1a1a2e;
+            min-width: 200px; text-align: center; padding: 6px 16px;
+            background: #e8f4fd; border-radius: 6px; border: 1px solid #b8daf0;
+            white-space: nowrap;
+        }
+        .playback-info { font-size: 0.75rem; color: #6c757d; }
+
+        /* Status cards */
+        .cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 12px; margin-bottom: 20px; }
+        .card {
+            background: #fff; border-radius: 10px; padding: 16px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08); text-align: center;
+        }
+        .card .label { font-size: 0.7rem; color: #6c757d; text-transform: uppercase; letter-spacing: 0.5px; }
+        .card .value { font-size: 1.6rem; font-weight: 700; margin: 4px 0; }
+        .card .unit { font-size: 0.8rem; color: #6c757d; }
+        .card.alert { border-left: 4px solid #e74c3c; }
+        .card.warn { border-left: 4px solid #f39c12; }
+        .card.ok { border-left: 4px solid #27ae60; }
+
+        /* Charts */
+        .chart-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 20px; }
+        .chart-box { background: #fff; border-radius: 10px; padding: 16px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
+        .chart-box h3 { font-size: 0.9rem; margin-bottom: 10px; color: #495057; }
+        canvas { max-height: 220px; }
+
+        /* ATS panel */
+        .ats-panel { background: #fff; border-radius: 10px; padding: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); margin-bottom: 20px; }
+        .ats-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 12px; margin-top: 12px; }
+        .ats-item { padding: 10px; border-radius: 6px; background: #f8f9fa; }
+        .ats-item .key { font-size: 0.7rem; color: #6c757d; text-transform: uppercase; }
+        .ats-item .val { font-size: 1rem; font-weight: 600; margin-top: 2px; }
+        .pill { display: inline-block; padding: 2px 10px; border-radius: 12px; font-size: 0.75rem; font-weight: 700; }
+        .pill.green { background: #d4edda; color: #155724; }
+        .pill.red { background: #f8d7da; color: #721c24; }
+        .pill.yellow { background: #fff3cd; color: #856404; }
+        .pill.blue { background: #d1ecf1; color: #0c5460; }
+
+        /* Scenario selector + controls */
+        .controls { display: flex; gap: 12px; align-items: center; margin-bottom: 16px; flex-wrap: wrap; }
+        .controls select, .controls button {
+            padding: 8px 16px; border-radius: 6px; border: 1px solid #ced4da;
+            font-size: 0.85rem; cursor: pointer; background: #fff;
+        }
+        .btn-analyze {
+            background: linear-gradient(135deg, #2d3436, #0984e3) !important;
+            color: #fff !important; border: none !important; font-weight: 700;
+            padding: 10px 24px !important; transition: transform 0.1s;
+        }
+        .btn-analyze:hover { transform: scale(1.03); }
+        .btn-analyze:disabled { opacity: 0.5; cursor: wait; }
+
+        /* Findings */
+        .findings { display: grid; grid-template-columns: 1fr; gap: 12px; margin-bottom: 20px; }
+        .finding {
+            background: #fff; border-radius: 10px; padding: 16px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08); border-left: 4px solid #6c757d;
+        }
+        .finding.critical { border-left-color: #e74c3c; }
+        .finding.high { border-left-color: #f39c12; }
+        .finding.info { border-left-color: #27ae60; }
+        .finding h4 { font-size: 0.95rem; margin-bottom: 6px; }
+        .finding .meta { font-size: 0.75rem; color: #6c757d; margin-bottom: 8px; }
+        .finding .issue { font-size: 0.8rem; margin-bottom: 6px; }
+        .finding .action { font-size: 0.8rem; color: #0984e3; }
+
+        /* Reports */
+        .report-list { background: #fff; border-radius: 10px; padding: 16px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
+        .report-list a { display: block; padding: 6px 0; color: #0984e3; text-decoration: none; font-size: 0.85rem; }
+        .report-list a:hover { text-decoration: underline; }
+
+        /* Analysis results */
+        .analysis-result { background: #fff; border-radius: 10px; padding: 16px; margin-bottom: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); display: none; }
+        .analysis-result.show { display: block; }
+        .step { padding: 8px; margin: 4px 0; background: #f8f9fa; border-radius: 6px; font-size: 0.8rem; }
+
+        .section-title { font-size: 1.1rem; margin: 24px 0 12px; border-bottom: 2px solid #e9ecef; padding-bottom: 6px; }
+        @media (max-width: 768px) { .chart-row { grid-template-columns: 1fr; } }
+        .spinner { display: inline-block; width: 16px; height: 16px; border: 3px solid #f3f3f3; border-top: 3px solid #0984e3; border-radius: 50%; animation: spin 1s linear infinite; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+        /* AI Investigation Center */
+        .ai-inv-center {
+            background: linear-gradient(135deg, #f8f9ff, #eef1ff);
+            border: 1px solid #d5dbff; border-radius: 12px; padding: 24px;
+            box-shadow: 0 2px 12px rgba(108,92,231,0.1); margin-bottom: 24px;
+        }
+        .ai-inv-header { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+        .ai-inv-header h2 { font-size: 1.25rem; color: #2d3436; }
+        .ai-inv-badge {
+            background: linear-gradient(135deg, #6c5ce7, #a29bfe); color: #fff;
+            padding: 3px 12px; border-radius: 12px; font-size: 0.72rem; font-weight: 700;
+        }
+        .ai-inv-intro { font-size: 0.85rem; color: #555; margin-bottom: 16px; line-height: 1.5; }
+        .ai-inv-questions { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 16px; }
+        @media (max-width: 600px) { .ai-inv-questions { grid-template-columns: 1fr; } }
+        .ai-inv-q-card {
+            background: #fff; border: 2px solid #e9ecef; border-radius: 10px;
+            padding: 14px 16px; cursor: pointer; transition: all 0.2s;
+        }
+        .ai-inv-q-card:hover { border-color: #6c5ce7; box-shadow: 0 2px 8px rgba(108,92,231,0.15); }
+        .ai-inv-q-card.selected { border-color: #6c5ce7; background: #f8f7ff; }
+        .ai-inv-q-num { font-size: 0.72rem; font-weight: 700; color: #6c5ce7; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px; }
+        .ai-inv-q-text { font-size: 0.9rem; color: #2d3436; line-height: 1.4; }
+        .ai-inv-action-row { display: flex; gap: 12px; align-items: center; margin-bottom: 12px; flex-wrap: wrap; }
+        .ai-inv-selected {
+            flex: 1; min-width: 250px; padding: 12px 16px; border-radius: 8px;
+            background: #fff; border: 1px solid #d5dbff; font-size: 0.88rem; color: #2d3436;
+            font-style: italic;
+        }
+        .ai-inv-copy-btn {
+            padding: 12px 28px; border-radius: 8px; border: none;
+            background: linear-gradient(135deg, #6c5ce7, #a29bfe); color: #fff;
+            font-weight: 700; font-size: 0.88rem; cursor: pointer; white-space: nowrap;
+            transition: transform 0.1s;
+        }
+        .ai-inv-copy-btn:hover { transform: scale(1.03); }
+        .ai-inv-copy-btn.copied { background: linear-gradient(135deg, #27ae60, #2ecc71); }
+        .ai-inv-notice {
+            background: #eef1ff; border: 1px solid #d5dbff; border-radius: 8px;
+            padding: 10px 16px; font-size: 0.78rem; color: #555; line-height: 1.5;
+        }
+        .ai-inv-notice strong { color: #2d3436; }
+        .ai-inv-notice .arrow { color: #6c5ce7; font-weight: 700; }
+
+        /* AI Investigation Results */
+        .ai-inv-results { margin-top: 20px; }
+        .ai-inv-results-title { font-size: 1rem; font-weight: 700; color: #2d3436; margin-bottom: 12px; }
+        .ai-inv-investigation {
+            background: #fff; border-radius: 10px; padding: 16px 20px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.06); margin-bottom: 14px;
+            border-left: 4px solid #6c5ce7;
+        }
+        .ai-inv-investigation.rca { border-left-color: #e17055; }
+        .ai-inv-inv-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+        .ai-inv-inv-title { font-size: 0.95rem; font-weight: 700; color: #2d3436; }
+        .ai-inv-inv-meta { font-size: 0.72rem; color: #6c757d; }
+        .ai-inv-verdict {
+            display: inline-block; padding: 4px 14px; border-radius: 12px;
+            font-size: 0.8rem; font-weight: 700; margin: 4px 0;
+        }
+        .ai-inv-verdict.not-ready { background: #f8d7da; color: #721c24; }
+        .ai-inv-verdict.ready { background: #d4edda; color: #155724; }
+        .ai-inv-inv-request {
+            font-size: 0.8rem; color: #555; font-style: italic; margin-bottom: 10px;
+            padding: 8px 12px; background: #f8f9fa; border-radius: 6px; border-left: 3px solid #ced4da;
+        }
+        .ai-inv-problems { margin: 8px 0; }
+        .ai-inv-problem {
+            padding: 6px 12px; border-radius: 6px; margin: 4px 0; font-size: 0.8rem;
+            border-left: 3px solid #6c757d; background: #f8f9fa;
+        }
+        .ai-inv-problem.critical { border-left-color: #e74c3c; background: #fff5f5; }
+        .ai-inv-problem.high { border-left-color: #f39c12; background: #fffbf0; }
+        .ai-inv-problem .pill-inline {
+            display: inline-block; padding: 1px 8px; border-radius: 8px;
+            font-size: 0.68rem; font-weight: 700; margin-right: 6px;
+        }
+        .ai-inv-problem .pill-inline.critical { background: #f8d7da; color: #721c24; }
+        .ai-inv-problem .pill-inline.high { background: #fff3cd; color: #856404; }
+        .ai-inv-wo-table { width: 100%; border-collapse: collapse; margin: 8px 0; font-size: 0.78rem; }
+        .ai-inv-wo-table th { text-align: left; padding: 4px 8px; border-bottom: 1px solid #dee2e6; color: #6c757d; font-size: 0.72rem; text-transform: uppercase; }
+        .ai-inv-wo-table td { padding: 4px 8px; border-bottom: 1px solid #f1f3f5; }
+        .ai-inv-summary-text { font-size: 0.82rem; color: #2d3436; line-height: 1.5; margin: 8px 0; }
+        .ai-inv-disclaimer { font-size: 0.72rem; color: #6c757d; margin-top: 12px; font-style: italic; }
+        .ai-inv-no-results { padding: 16px; text-align: center; color: #6c757d; font-size: 0.85rem; }
+
+        /* Investigation Request Input */
+        .ai-inv-input-area { margin-bottom: 14px; }
+        .ai-inv-textarea {
+            width: 100%; min-height: 80px; padding: 12px 14px; border: 2px solid #d5dbff;
+            border-radius: 8px; font-size: 0.88rem; color: #2d3436; resize: vertical;
+            font-family: inherit; transition: border-color 0.2s;
+        }
+        .ai-inv-textarea:focus { outline: none; border-color: #6c5ce7; box-shadow: 0 0 0 3px rgba(108,92,231,0.12); }
+        .ai-inv-submit-row { display: flex; gap: 12px; align-items: center; margin-top: 10px; flex-wrap: wrap; }
+        .ai-inv-submit-btn {
+            padding: 12px 28px; border-radius: 8px; border: none;
+            background: linear-gradient(135deg, #0984e3, #0984e3); color: #fff;
+            font-weight: 700; font-size: 0.88rem; cursor: pointer; white-space: nowrap;
+            transition: transform 0.1s;
+        }
+        .ai-inv-submit-btn:hover { transform: scale(1.03); }
+        .ai-inv-submit-btn:disabled { opacity: 0.5; cursor: wait; }
+        .ai-inv-submit-btn.success { background: linear-gradient(135deg, #27ae60, #2ecc71); }
+
+        /* Active Request Status */
+        .ai-inv-active-req {
+            background: #fff; border: 1px solid #d5dbff; border-radius: 10px;
+            padding: 16px 20px; margin-top: 14px; display: none;
+        }
+        .ai-inv-active-req.show { display: block; }
+        .ai-inv-active-req .req-header {
+            display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;
+        }
+        .ai-inv-active-req .req-id { font-size: 0.72rem; color: #6c757d; font-family: monospace; }
+        .ai-inv-active-req .req-question {
+            font-size: 0.88rem; color: #2d3436; font-style: italic; margin-bottom: 10px;
+            padding: 8px 12px; background: #f8f9fa; border-radius: 6px; border-left: 3px solid #6c5ce7;
+        }
+        .ai-inv-status-badge {
+            display: inline-flex; align-items: center; gap: 6px; padding: 4px 14px;
+            border-radius: 12px; font-size: 0.78rem; font-weight: 700;
+        }
+        .ai-inv-status-badge.awaiting { background: #fff3cd; color: #856404; }
+        .ai-inv-status-badge.investigating { background: #d1ecf1; color: #0c5460; }
+        .ai-inv-status-badge.generating { background: #e2d9f3; color: #6c5ce7; }
+        .ai-inv-status-badge.completed { background: #d4edda; color: #155724; }
+        .ai-inv-status-badge.failed { background: #f8d7da; color: #721c24; }
+        .ai-inv-status-badge .status-dot {
+            width: 8px; height: 8px; border-radius: 50%; background: currentColor;
+            animation: pulse 1.5s infinite;
+        }
+        .ai-inv-status-badge.completed .status-dot,
+        .ai-inv-status-badge.failed .status-dot { animation: none; }
+        @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.4; } }
+        .ai-inv-notice-inline {
+            font-size: 0.76rem; color: #555; line-height: 1.5; margin-top: 8px;
+            padding: 8px 12px; background: #eef1ff; border-radius: 6px; border: 1px solid #d5dbff;
+        }
+        .ai-inv-output-files { margin-top: 10px; }
+        .ai-inv-output-files a {
+            display: inline-block; margin: 2px 8px 2px 0; color: #6c5ce7; text-decoration: none;
+            font-size: 0.8rem; border: 1px solid #d5dbff; padding: 3px 10px; border-radius: 6px;
+        }
+        .ai-inv-output-files a:hover { background: #f8f7ff; }
+
+        /* Investigation History */
+        .ai-inv-history { margin-top: 20px; }
+        .ai-inv-history-title { font-size: 1rem; font-weight: 700; color: #2d3436; margin-bottom: 10px; }
+        .ai-inv-history-list { display: flex; flex-direction: column; gap: 8px; }
+        .ai-inv-history-item {
+            background: #fff; border: 1px solid #e9ecef; border-radius: 8px; padding: 10px 14px;
+            cursor: pointer; transition: border-color 0.2s; font-size: 0.82rem;
+        }
+        .ai-inv-history-item:hover { border-color: #6c5ce7; }
+        .ai-inv-history-item.selected { border-color: #6c5ce7; background: #f8f7ff; }
+        .ai-inv-history-item .hi-q { color: #2d3436; margin-bottom: 4px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .ai-inv-history-item .hi-meta { display: flex; gap: 10px; align-items: center; }
+        .ai-inv-history-empty { padding: 12px; text-align: center; color: #6c757d; font-size: 0.82rem; }
+
+        /* Modal-like viewer for request outputs */
+        .ai-inv-output-viewer {
+            background: #fff; border: 1px solid #d5dbff; border-radius: 10px; padding: 16px 20px;
+            margin-top: 12px; display: none;
+        }
+        .ai-inv-output-viewer.show { display: block; }
+        .ai-inv-output-viewer pre {
+            background: #f8f9fa; border: 1px solid #e9ecef; border-radius: 6px;
+            padding: 12px; overflow-x: auto; font-size: 0.78rem; line-height: 1.5;
+            white-space: pre-wrap; word-wrap: break-word; max-height: 500px; overflow-y: auto;
+        }
+
+        /* Demo Reset Button */
+        .ai-inv-reset-btn {
+            padding: 6px 16px; border-radius: 6px; border: 1px solid #f0c0c0;
+            background: #fff5f5; color: #c0392b; font-size: 0.75rem; font-weight: 600;
+            cursor: pointer; margin-top: 10px; transition: all 0.2s;
+        }
+        .ai-inv-reset-btn:hover { background: #f8d7da; border-color: #e74c3c; }
+        .ai-inv-reset-btn:disabled { opacity: 0.5; cursor: wait; }
+
+        /* Example AI Investigations (legacy reports section) */
+        .ai-example-section {
+            background: #fff; border: 1px solid #e9ecef; border-radius: 12px;
+            padding: 24px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); margin-bottom: 24px;
+        }
+        .ai-example-header { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+        .ai-example-header h2 { font-size: 1.15rem; color: #2d3436; }
+        .ai-example-badge {
+            background: #636e72; color: #fff; padding: 3px 12px;
+            border-radius: 12px; font-size: 0.72rem; font-weight: 700;
+        }
+        .ai-example-intro { font-size: 0.82rem; color: #6c757d; margin-bottom: 16px; line-height: 1.5; }
+        .ai-example-divider {
+            border: none; border-top: 2px dashed #e9ecef; margin: 24px 0;
+        }
+    </style>
+</head>
+<body>
+<div class="header">
+    <div>
+        <h1>GenBuddy -- Generator Monitoring Dashboard</h1>
+        <div class="info">AI Power ASC344 | 344 kVA / 275 kW | 400/230V 50Hz | DSE6120</div>
+    </div>
+    <div class="badge">SIMULATED HISTORICAL DATA</div>
+</div>
+
+<div class="container">
+    <!-- Simulated data warning -->
+    <div class="sim-banner">
+        <span class="icon">&#9888;</span>
+        <span><b>Simulated historical data playback</b> -- not live monitoring. All readings come from pre-recorded CSV telemetry records.</span>
+    </div>
+
+    <!-- AI Investigation Center -->
+    <div class="ai-inv-center">
+        <div class="ai-inv-header">
+            <h2>AI Investigation Center</h2>
+            <span class="ai-inv-badge">WorkBuddy Agent</span>
+        </div>
+        <p class="ai-inv-intro">
+            Submit a generator maintenance question below. The dashboard saves it as a
+            request file and shows <b>Awaiting WorkBuddy</b> until a real WorkBuddy agent
+            picks it up. Copy the question into your WorkBuddy workspace to start the
+            investigation. When the agent completes its work, results appear here
+            automatically.
+        </p>
+
+        <div class="ai-inv-questions">
+            <div class="ai-inv-q-card selected" id="qCard0" onclick="selectQuestion(0)">
+                <div class="ai-inv-q-num">Example Question 1</div>
+                <div class="ai-inv-q-text">Is my backup generator ready for the next power outage?</div>
+            </div>
+            <div class="ai-inv-q-card" id="qCard1" onclick="selectQuestion(1)">
+                <div class="ai-inv-q-num">Example Question 2</div>
+                <div class="ai-inv-q-text">Why did my generator fail during the last power outage?</div>
+            </div>
+        </div>
+
+        <div class="ai-inv-input-area">
+            <textarea class="ai-inv-textarea" id="questionInput" placeholder="Type your own generator maintenance question here, or click an example question above to fill it in..."></textarea>
+            <div class="ai-inv-submit-row">
+                <button class="ai-inv-submit-btn" id="submitBtn" onclick="submitInvestigation()">Submit Investigation</button>
+                <button class="ai-inv-copy-btn" id="copyBtn" onclick="copyRequest()">Copy Request</button>
+            </div>
+        </div>
+
+        <div class="ai-inv-notice">
+            <strong>How to use:</strong> Type or select a question, then click
+            <strong>Submit Investigation</strong> to save it as a request file. The status
+            shows <b>Awaiting WorkBuddy</b> — the dashboard does <b>not</b> invoke WorkBuddy.
+            Then click <strong>Copy Request</strong>, open your <strong>WorkBuddy AI workspace</strong>,
+            and paste the question into the chat.
+            <span class="arrow">&#8594;</span> The agent reads the request, investigates using
+            <code>validate_data.py</code>, <code>fault_investigation.py</code>, and the Flask data API,
+            writes report files to <code>outputs/&lt;request_id&gt;/</code>, and updates the status.
+            <span class="arrow">&#8594;</span> This page auto-refreshes the status every 5 seconds.
+            <br><br>
+            <em>Local demonstration only: request/output files exist on this machine. A publicly hosted
+            dashboard will not automatically share these files without additional synchronization.</em>
+        </div>
+
+        <!-- Active Request Status -->
+        <div class="ai-inv-active-req" id="activeRequest">
+            <div class="req-header">
+                <span class="ai-inv-status-badge awaiting" id="activeStatusBadge">
+                    <span class="status-dot"></span>
+                    <span id="activeStatusText">Awaiting WorkBuddy</span>
+                </span>
+                <span class="req-id" id="activeReqId"></span>
+            </div>
+            <div class="req-question" id="activeReqQuestion"></div>
+            <div id="activeReqDetails"></div>
+        </div>
+
+        <!-- Investigation History -->
+        <div class="ai-inv-history">
+            <div class="ai-inv-history-title">Investigation History</div>
+            <div class="ai-inv-history-list" id="historyList">
+                <div class="ai-inv-history-empty">No investigation requests yet.</div>
+            </div>
+        </div>
+
+        <!-- Output File Viewer -->
+        <div class="ai-inv-output-viewer" id="outputViewer">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
+                <h3 style="font-size:0.9rem;" id="viewerTitle">Output File</h3>
+                <button onclick="closeViewer()" style="border:none;background:none;font-size:1.2rem;cursor:pointer;color:#6c757d;">&times;</button>
+            </div>
+            <pre id="viewerContent">Loading...</pre>
+        </div>
+
+        <!-- Demo Reset -->
+        <button class="ai-inv-reset-btn" id="resetBtn" onclick="demoReset()">
+            Clear Test Requests &amp; Outputs
+        </button>
+    </div>
+
+    <hr class="ai-example-divider">
+
+    <!-- Example AI Investigations (legacy reports, separate from active workflow) -->
+    <div class="ai-example-section">
+        <div class="ai-example-header">
+            <h2>Example AI Investigations</h2>
+            <span class="ai-example-badge">Previous Demonstrations</span>
+        </div>
+        <p class="ai-example-intro">
+            These reports were generated by WorkBuddy AI agent investigations in earlier sessions.
+            They demonstrate how the agent plans, executes, and reports on generator maintenance
+            questions using different strategies. They are separate from the active request workflow above.
+        </p>
+        <div id="aiInvResults">
+            <div class="ai-inv-no-results">Loading example investigation summaries...</div>
+        </div>
+    </div>
+
+    <!-- Scenario + Analyze Controls -->
+    <div class="controls">
+        <label><b>Scenario:</b></label>
+        <select id="scenarioSelect" onchange="selectScenario()">
+            <option value="all">All Scenarios (Full Timeline)</option>
+        </select>
+        <button class="btn-analyze" id="analyzeBtn" onclick="runAnalysis()">Analyze Generator Health</button>
+    </div>
+
+    <!-- Playback Controls -->
+    <div class="playback-bar">
+        <div class="playback-header">
+            <span class="playback-label">&#9201; Historical Playback</span>
+            <span class="playback-info" id="playbackInfo">Record 0 / 0</span>
+        </div>
+        <div class="playback-controls">
+            <button class="pb-btn" id="prevBtn" onclick="stepPrev()" title="Previous timestamp">&#9198;</button>
+            <button class="pb-btn" id="playBtn" onclick="playPause()" title="Play / Pause">&#9654;</button>
+            <button class="pb-btn" id="nextBtn" onclick="stepNext()" title="Next timestamp">&#9197;</button>
+            <input type="range" id="timeSlider" min="0" max="0" value="0" oninput="onSliderInput()">
+            <span class="timestamp-display" id="timestampDisplay">--:--:--</span>
+        </div>
+    </div>
+
+    <!-- Analysis Results -->
+    <div class="analysis-result" id="analysisResult"></div>
+
+    <!-- Status Cards -->
+    <div class="section-title">Generator Status (Playback Position)</div>
+    <div class="cards" id="statusCards"></div>
+
+    <!-- Charts -->
+    <div class="section-title">Historical Charts</div>
+    <div class="chart-row">
+        <div class="chart-box"><h3>Voltage & Frequency</h3><canvas id="chartVF"></canvas></div>
+        <div class="chart-box"><h3>Active Power & Loading</h3><canvas id="chartPower"></canvas></div>
+    </div>
+    <div class="chart-row">
+        <div class="chart-box"><h3>Coolant Temperature & Oil Pressure</h3><canvas id="chartTemp"></canvas></div>
+        <div class="chart-box"><h3>Fuel Level & Battery Voltage</h3><canvas id="chartFuel"></canvas></div>
+    </div>
+
+    <!-- ATS Monitoring -->
+    <div class="section-title">ATS Monitoring (Playback Position)</div>
+    <div class="ats-panel">
+        <div class="ats-grid" id="atsPanel"></div>
+    </div>
+
+    <!-- Fault Findings -->
+    <div class="section-title">Fault Findings & Maintenance Actions</div>
+    <div class="findings" id="findings"></div>
+
+    <!-- Reports -->
+    <div class="section-title">Generated Reports</div>
+    <div class="report-list" id="reportList"></div>
+</div>
+
+<script>
+// ── Global State ──
+let allGenData = [], allAtsData = [], scenarios = [];
+let currentGen = [], currentAts = [];       // filtered by scenario
+let charts = {};
+let playback = { playing: false, index: 0, timer: null, speed: 600 };
+
+// ── Chart.js Plugin: Playback Indicator Line ──
+const playbackLinePlugin = {
+    id: 'playbackLine',
+    afterDatasetsDraw(chart) {
+        const idx = chart.options.playbackIndex;
+        if (idx === undefined || idx === null || idx < 0) return;
+        const meta = chart.getDatasetMeta(0);
+        if (!meta || !meta.data || !meta.data[idx]) return;
+        const x = meta.data[idx].x;
+        const top = chart.chartArea.top;
+        const bottom = chart.chartArea.bottom;
+        const ctx = chart.ctx;
+        ctx.save();
+        // Vertical dashed line
+        ctx.beginPath();
+        ctx.moveTo(x, top);
+        ctx.lineTo(x, bottom);
+        ctx.strokeStyle = 'rgba(231,76,60,0.75)';
+        ctx.lineWidth = 2;
+        ctx.setLineDash([5, 3]);
+        ctx.stroke();
+        // Small triangle marker at top
+        ctx.beginPath();
+        ctx.moveTo(x - 5, top);
+        ctx.lineTo(x + 5, top);
+        ctx.lineTo(x, top + 6);
+        ctx.closePath();
+        ctx.fillStyle = 'rgba(231,76,60,0.9)';
+        ctx.fill();
+        ctx.restore();
+    }
+};
+
+// ── Initialize ──
+let publicMode = false;
+
+async function init() {
+    // Check if running in public demo mode
+    try {
+        const modeResp = await fetch('/api/public_mode');
+        const modeData = await modeResp.json();
+        publicMode = modeData.public_demo_mode;
+    } catch (e) {
+        publicMode = false;
+    }
+
+    if (publicMode) {
+        applyPublicModeUI();
+    }
+
+    const [gen, ats, scs, findings, reports] = await Promise.all([
+        fetch('/api/generator_data').then(r => r.json()),
+        fetch('/api/ats_events').then(r => r.json()),
+        fetch('/api/scenarios').then(r => r.json()),
+        fetch('/api/findings').then(r => r.json()),
+        fetch('/api/report_list').then(r => r.json()),
+    ]);
+    allGenData = gen; allAtsData = ats; scenarios = scs;
+    currentGen = gen; currentAts = ats;
+
+    // Populate scenario dropdown dynamically from /api/scenarios
+    populateScenarioDropdown();
+
+    // Configure slider range
+    const slider = document.getElementById('timeSlider');
+    slider.min = 0;
+    slider.max = Math.max(0, gen.length - 1);
+    playback.index = gen.length - 1;  // start at latest record
+    slider.value = playback.index;
+
+    // Render charts and initial playback state
+    renderCharts(currentGen);
+    renderFindings(findings);
+    renderReports(reports);
+    updatePlayback();
+
+    // Load AI investigation summaries from real report files
+    loadAISummary();
+
+    // Load investigation request history (skip in public mode)
+    if (!publicMode) {
+        loadRequestHistory();
+        // Pre-fill textarea with first example question
+        document.getElementById('questionInput').value = QUESTIONS[0];
+    }
+}
+
+function applyPublicModeUI() {
+    // Hide write UI elements
+    const els = ['submitBtn', 'copyBtn', 'resetBtn', 'analyzeBtn', 'questionInput'];
+    els.forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.style.display = 'none';
+    });
+
+    // Hide example question cards (they only serve the submit workflow)
+    document.querySelectorAll('.ai-inv-q-card').forEach(c => c.style.display = 'none');
+
+    // Hide active request panel
+    const ar = document.getElementById('activeRequest');
+    if (ar) ar.style.display = 'none';
+
+    // Hide investigation history
+    const hl = document.querySelector('.ai-inv-history');
+    if (hl) hl.style.display = 'none';
+
+    // Hide output file viewer
+    const ov = document.getElementById('outputViewer');
+    if (ov) ov.style.display = 'none';
+
+    // Replace the "how to use" notice with a read-only banner
+    const notice = document.querySelector('.ai-inv-notice');
+    if (notice) {
+        notice.innerHTML =
+            '<div style="background:#e8f4fd;border:1px solid #b8daf0;border-radius:8px;' +
+            'padding:12px 16px;color:#075985;font-size:0.85rem;">' +
+            '<b>&#128274; Read-Only Public Demo</b> &mdash; This dashboard is running in ' +
+            'public read-only mode. You can explore the simulated generator telemetry, ' +
+            'ATS events, historical playback, and example WorkBuddy investigation reports. ' +
+            'To submit a new investigation request, clone the repository and run locally.' +
+            '</div>';
+    }
+
+    // Replace AI Investigation Center intro text
+    const intro = document.querySelector('.ai-inv-intro');
+    if (intro) {
+        intro.innerHTML =
+            'The reports below were generated by WorkBuddy AI agent investigations. ' +
+            'They demonstrate how the agent plans, executes engineering tools, reads raw ' +
+            'data, and produces actionable maintenance recommendations. These are static ' +
+            'examples from real investigation sessions.';
+    }
+
+    // Hide the "AI Investigation Center" badge
+    const badge = document.querySelector('.ai-inv-badge');
+    if (badge) badge.style.display = 'none';
+}
+
+function populateScenarioDropdown() {
+    const sel = document.getElementById('scenarioSelect');
+    // Remove all options except "All Scenarios"
+    while (sel.options.length > 1) sel.remove(1);
+    scenarios.forEach((sc, i) => {
+        const opt = document.createElement('option');
+        opt.value = i;
+        const startStr = sc.start.substring(11, 16);
+        const endStr = sc.end ? sc.end.substring(11, 16) : 'end';
+        opt.textContent = `${i + 1}. ${sc.label} (${startStr}\u2013${endStr})`;
+        sel.appendChild(opt);
+    });
+}
+
+// ── Playback Controls ──
+function onSliderInput() {
+    if (playback.playing) playPause();  // stop auto-play on manual drag
+    playback.index = parseInt(document.getElementById('timeSlider').value);
+    updatePlayback();
+}
+
+function playPause() {
+    playback.playing = !playback.playing;
+    const btn = document.getElementById('playBtn');
+    if (playback.playing) {
+        btn.textContent = '\u23F8';
+        playback.timer = setInterval(() => {
+            if (playback.index < currentGen.length - 1) {
+                playback.index++;
+                document.getElementById('timeSlider').value = playback.index;
+                updatePlayback();
+            } else {
+                playPause();  // reached end, stop
+            }
+        }, playback.speed);
+    } else {
+        btn.textContent = '\u25B6';
+        if (playback.timer) { clearInterval(playback.timer); playback.timer = null; }
+    }
+}
+
+function stepPrev() {
+    if (playback.index > 0) {
+        playback.index--;
+        document.getElementById('timeSlider').value = playback.index;
+        updatePlayback();
+    }
+}
+
+function stepNext() {
+    if (playback.index < currentGen.length - 1) {
+        playback.index++;
+        document.getElementById('timeSlider').value = playback.index;
+        updatePlayback();
+    }
+}
+
+function updatePlayback() {
+    const idx = playback.index;
+    if (currentGen.length === 0) return;
+
+    const genRow = currentGen[idx];
+    const atsRow = currentAts[idx] || currentAts[Math.min(idx, currentAts.length - 1)];
+
+    // Update timestamp display
+    document.getElementById('timestampDisplay').textContent = formatTimestamp(genRow.timestamp);
+    document.getElementById('playbackInfo').textContent =
+        `Record ${idx + 1} / ${currentGen.length}`;
+
+    // Update status cards
+    renderStatus(genRow);
+
+    // Update ATS panel
+    if (atsRow) renderATS(atsRow);
+
+    // Update chart indicators
+    updateChartIndicators(idx);
+}
+
+function formatTimestamp(ts) {
+    // "2026-06-01T08:15:00" -> "Jun 1, 08:15:00"
+    const d = new Date(ts);
+    if (isNaN(d.getTime())) return ts;
+    const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+    const hh = String(d.getHours()).padStart(2, '0');
+    const mm = String(d.getMinutes()).padStart(2, '0');
+    const ss = String(d.getSeconds()).padStart(2, '0');
+    return `${months[d.getMonth()]} ${d.getDate()}, ${hh}:${mm}:${ss}`;
+}
+
+function updateChartIndicators(idx) {
+    Object.values(charts).forEach(c => {
+        if (c) {
+            c.options.playbackIndex = idx;
+            c.update('none');  // no-animation update for responsive indicator
+        }
+    });
+}
+
+// ── Scenario Selection ──
+function selectScenario() {
+    const selVal = document.getElementById('scenarioSelect').value;
+
+    // Stop playback if running
+    if (playback.playing) playPause();
+
+    // Filter data to selected scenario window
+    if (selVal === 'all') {
+        currentGen = allGenData;
+        currentAts = allAtsData;
+    } else {
+        const sc = scenarios[parseInt(selVal)];
+        if (sc) {
+            currentGen = allGenData.filter(r => {
+                if (r.timestamp < sc.start) return false;
+                if (sc.end && r.timestamp >= sc.end) return false;
+                return true;
+            });
+            currentAts = allAtsData.filter(r => {
+                if (r.timestamp < sc.start) return false;
+                if (sc.end && r.timestamp >= sc.end) return false;
+                return true;
+            });
+        }
+    }
+
+    // Update slider range
+    const slider = document.getElementById('timeSlider');
+    slider.min = 0;
+    slider.max = Math.max(0, currentGen.length - 1);
+
+    // Reset to informative record within the scenario
+    if (selVal !== 'all' && scenarios[parseInt(selVal)]) {
+        const sc = scenarios[parseInt(selVal)];
+        const focusIdx = currentGen.findIndex(r => r.timestamp === sc.focus_ts);
+        playback.index = focusIdx >= 0 ? focusIdx : 0;
+    } else {
+        playback.index = currentGen.length - 1;  // latest
+    }
+    slider.value = playback.index;
+
+    // Redraw charts with filtered data
+    Object.values(charts).forEach(c => { if (c) c.destroy(); });
+    charts = {};
+    renderCharts(currentGen);
+    updatePlayback();
+}
+
+// ── Status Cards ──
+function renderStatus(r) {
+    const state = r.operating_state;
+    const stateClass = state === 'STANDBY' ? 'ok' : state.includes('DEGRADED') ? 'alert' : state === 'RUNNING' ? 'ok' : 'warn';
+    const cards = [
+        {label: 'Operating State', value: state, unit: '', cls: stateClass},
+        {label: 'Voltage (L-L)', value: parseFloat(r.voltage_LL_V).toFixed(1), unit: 'V', cls: parseFloat(r.voltage_LL_V) > 0 ? 'ok' : ''},
+        {label: 'Frequency', value: parseFloat(r.frequency_Hz).toFixed(2), unit: 'Hz', cls: ''},
+        {label: 'Current', value: parseFloat(r.current_A).toFixed(1), unit: 'A', cls: ''},
+        {label: 'Active Power', value: parseFloat(r.active_power_kW).toFixed(1), unit: 'kW', cls: ''},
+        {label: 'Loading', value: (parseFloat(r.active_power_kW) / 275 * 100).toFixed(1), unit: '%', cls: ''},
+        {label: 'Fuel Level', value: parseFloat(r.fuel_level_L).toFixed(1), unit: 'L', cls: parseFloat(r.fuel_level_L) < 100 ? 'alert' : 'ok'},
+        {label: 'Battery', value: parseFloat(r.battery_V).toFixed(2), unit: 'V', cls: parseFloat(r.battery_V) < 22 ? 'warn' : 'ok'},
+        {label: 'Coolant Temp', value: parseFloat(r.coolant_temp_C).toFixed(1), unit: '\u00B0C', cls: parseFloat(r.coolant_temp_C) > 100 ? 'alert' : ''},
+        {label: 'Oil Pressure', value: parseFloat(r.oil_pressure_bar).toFixed(2), unit: 'bar', cls: ''},
+        {label: 'Engine Speed', value: r.engine_speed_rpm, unit: 'rpm', cls: ''},
+        {label: 'Running Hours', value: parseFloat(r.running_hours).toFixed(1), unit: 'h', cls: ''},
+    ];
+    document.getElementById('statusCards').innerHTML = cards.map(c =>
+        `<div class="card ${c.cls}"><div class="label">${c.label}</div><div class="value">${c.value}</div><div class="unit">${c.unit}</div></div>`
+    ).join('');
+}
+
+// ── ATS Panel ──
+function renderATS(r) {
+    const pillClass = v => {
+        if (v === 'NORMAL' || v === 'CONFIRMED' || v === 'UTILITY') return 'green';
+        if (v === 'FAILED' || v === 'STOPPED') return 'red';
+        if (v === 'PENDING' || v === 'STARTING') return 'yellow';
+        return 'blue';
+    };
+    const items = [
+        {key: 'Timestamp', val: r.timestamp},
+        {key: 'Utility Supply', val: r.utility_supply_status, pill: true},
+        {key: 'Start Command', val: r.generator_start_command, pill: true},
+        {key: 'Generator Status', val: r.generator_running_status, pill: true},
+        {key: 'ATS Commanded Source', val: r.ats_commanded_source, pill: true},
+        {key: 'ATS Actual Position', val: r.ats_actual_position, pill: true},
+        {key: 'Transfer Confirmation', val: r.transfer_confirmation, pill: true},
+        {key: 'Alarm Events', val: r.alarm_events, pill: r.alarm_events !== 'NONE'},
+    ];
+    document.getElementById('atsPanel').innerHTML = items.map(i =>
+        `<div class="ats-item"><div class="key">${i.key}</div><div class="val">${i.pill ? `<span class="pill ${pillClass(i.val)}">${i.val}</span>` : i.val}</div></div>`
+    ).join('');
+}
+
+// ── Charts ──
+function renderCharts(data) {
+    const labels = data.map(r => r.timestamp.substring(11, 16));
+    const num = (arr, key) => arr.map(r => parseFloat(r[key]));
+
+    Chart.defaults.font.size = 9;
+
+    // Voltage & Frequency
+    charts.vf = makeChart('chartVF', labels, [
+        {label: 'Voltage (V)', data: num(data, 'voltage_LL_V'), color: 'rgba(9,132,227,1)', yAxis: 'y'},
+        {label: 'Frequency (Hz)', data: num(data, 'frequency_Hz'), color: 'rgba(255,159,64,1)', yAxis: 'y1'},
+    ], {yLabel: 'Volts', y1Label: 'Hz', y1Display: true});
+
+    // Power & Loading
+    charts.power = makeChart('chartPower', labels, [
+        {label: 'Active Power (kW)', data: num(data, 'active_power_kW'), color: 'rgba(23,162,184,1)', yAxis: 'y'},
+        {label: 'Loading (%)', data: num(data, 'active_power_kW').map(v => v / 275 * 100), color: 'rgba(255,99,132,1)', yAxis: 'y1'},
+    ], {yLabel: 'kW', y1Label: '%', y1Display: true});
+
+    // Coolant & Oil
+    charts.temp = makeChart('chartTemp', labels, [
+        {label: 'Coolant Temp (\u00B0C)', data: num(data, 'coolant_temp_C'), color: 'rgba(231,76,60,1)', yAxis: 'y'},
+        {label: 'Oil Pressure (bar)', data: num(data, 'oil_pressure_bar'), color: 'rgba(39,174,96,1)', yAxis: 'y1'},
+    ], {yLabel: '\u00B0C', y1Label: 'bar', y1Display: true});
+
+    // Fuel & Battery
+    charts.fuel = makeChart('chartFuel', labels, [
+        {label: 'Fuel Level (L)', data: num(data, 'fuel_level_L'), color: 'rgba(243,156,18,1)', yAxis: 'y'},
+        {label: 'Battery (V)', data: num(data, 'battery_V'), color: 'rgba(108,117,125,1)', yAxis: 'y1'},
+    ], {yLabel: 'Liters', y1Label: 'Volts', y1Display: true});
+}
+
+function makeChart(canvasId, labels, datasets, opts) {
+    const ctx = document.getElementById(canvasId).getContext('2d');
+    return new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: labels,
+            datasets: datasets.map(d => ({
+                label: d.label, data: d.data,
+                borderColor: d.color, backgroundColor: d.color.replace('1)', '0.1)'),
+                borderWidth: 1.5, pointRadius: 0, yAxisID: d.yAxis, tension: 0.3,
+            })),
+        },
+        options: {
+            responsive: true, maintainAspectRatio: false,
+            playbackIndex: -1,
+            plugins: {
+                legend: { display: true, position: 'top', labels: { font: { size: 9 } } },
+                tooltip: { mode: 'index', intersect: false },
+            },
+            scales: {
+                x: { ticks: { maxTicksLimit: 10, font: { size: 8 } } },
+                y: { position: 'left', title: { display: !!opts.yLabel, text: opts.yLabel, font: { size: 9 } }, ticks: { font: { size: 8 } } },
+                y1: { position: 'right', display: opts.y1Display, title: { display: !!opts.y1Label, text: opts.y1Label, font: { size: 9 } }, ticks: { font: { size: 8 } }, grid: { drawOnChartArea: false } },
+            },
+        },
+        plugins: [playbackLinePlugin],
+    });
+}
+
+// ── Findings ──
+function renderFindings(findings) {
+    if (!findings || findings.length === 0) {
+        document.getElementById('findings').innerHTML = '<p style="color:#6c757d;font-size:0.85rem;">No findings loaded. Click "Analyze Generator Health" to generate.</p>';
+        return;
+    }
+    const cls = p => p === 'CRITICAL' ? 'critical' : p === 'HIGH' ? 'high' : 'info';
+    const pillC = p => p === 'CRITICAL' ? 'red' : p === 'HIGH' ? 'yellow' : 'green';
+    document.getElementById('findings').innerHTML = findings.map(f => `
+        <div class="finding ${cls(f.priority)}">
+            <h4>${f.scenario}</h4>
+            <div class="meta">Priority: <span class="pill ${pillC(f.priority)}">${f.priority}</span></div>
+            <div class="issue"><b>Issue:</b> ${f.observed_issue.substring(0, 200)}...</div>
+            <div class="action"><b>Action:</b> ${f.suggested_action.substring(0, 200)}...</div>
+        </div>
+    `).join('');
+}
+
+// ── Reports ──
+function renderReports(reports) {
+    document.getElementById('reportList').innerHTML = reports.map(r =>
+        `<a href="/api/reports/${r.name}" target="_blank">&#128196; ${r.name} (${r.folder}/)</a>`
+    ).join('');
+}
+
+// ── Analyze Button ──
+async function runAnalysis() {
+    const btn = document.getElementById('analyzeBtn');
+    const result = document.getElementById('analysisResult');
+    btn.disabled = true; btn.innerHTML = '<span class="spinner"></span> Analyzing...';
+    result.classList.add('show');
+    result.innerHTML = '<h3>Analysis Results</h3><p>Running validation and fault investigation scripts...</p>';
+
+    try {
+        const resp = await fetch('/api/analyze', { method: 'POST' });
+        const data = await resp.json();
+        let html = '<h3>Analysis Results</h3><div style="margin:10px 0;">';
+        for (const step of data.steps) {
+            const icon = step.error ? '\u274C' : step.checks_passed === false ? '\u26A0\uFE0F' : '\u2705';
+            html += `<div class="step">${icon} <b>${step.tool}</b> &mdash; exit=${step.exit_code} | ${step.summary || step.error || ''} ${step.details || ''}</div>`;
+        }
+        html += '</div>';
+        if (data.findings && data.findings.length > 0) {
+            html += `<p style="font-size:0.8rem;color:#27ae60;">\u2705 ${data.findings.length} findings updated. Refresh findings below.</p>`;
+        }
+        html += '<p style="font-size:0.75rem;color:#6c757d;">Note: Engineering validation uses deterministic numerical checks. Diagnostic explanations are AI-generated reasoning, not live sensor data.</p>';
+        result.innerHTML = html;
+
+        // Reload findings
+        const findings = await fetch('/api/findings').then(r => r.json());
+        renderFindings(findings);
+    } catch (e) {
+        result.innerHTML = `<h3>Analysis Error</h3><p style="color:#e74c3c;">${e.message}</p>`;
+    }
+    btn.disabled = false; btn.textContent = 'Analyze Generator Health';
+}
+
+// ── AI Investigation Center ──
+const QUESTIONS = [
+    'Is my backup generator ready for the next power outage? Investigate the available telemetry, ATS events and maintenance history, identify potential problems, and prepare a prioritized maintenance action plan.',
+    'My generator shut down during last week\'s power outage. Investigate what happened, identify the root cause, and tell me exactly what to tell my maintenance contractor to fix.',
+];
+let selectedQuestionIdx = 0;
+let activeRequestId = null;
+let statusPollTimer = null;
+let selectedHistoryRid = null;
+
+function selectQuestion(idx) {
+    selectedQuestionIdx = idx;
+    document.querySelectorAll('.ai-inv-q-card').forEach((c, i) => {
+        c.classList.toggle('selected', i === idx);
+    });
+    document.getElementById('questionInput').value = QUESTIONS[idx];
+}
+
+function copyRequest() {
+    const text = document.getElementById('questionInput').value.trim() || QUESTIONS[selectedQuestionIdx];
+    const btn = document.getElementById('copyBtn');
+    navigator.clipboard.writeText(text).then(() => {
+        btn.textContent = 'Copied!';
+        btn.classList.add('copied');
+        setTimeout(() => {
+            btn.textContent = 'Copy Request';
+            btn.classList.remove('copied');
+        }, 2000);
+    }).catch(() => {
+        // Fallback for browsers without clipboard API
+        const ta = document.createElement('textarea');
+        ta.value = text;
+        document.body.appendChild(ta);
+        ta.select();
+        try { document.execCommand('copy'); } catch(e) {}
+        document.body.removeChild(ta);
+        btn.textContent = 'Copied!';
+        btn.classList.add('copied');
+        setTimeout(() => {
+            btn.textContent = 'Copy Request';
+            btn.classList.remove('copied');
+        }, 2000);
+    });
+}
+
+async function submitInvestigation() {
+    const question = document.getElementById('questionInput').value.trim();
+    if (!question) {
+        alert('Please type or select a question first.');
+        return;
+    }
+
+    const btn = document.getElementById('submitBtn');
+    btn.disabled = true;
+    btn.textContent = 'Submitting...';
+
+    try {
+        const resp = await fetch('/api/request/new', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({question: question}),
+        });
+        const data = await resp.json();
+
+        if (resp.ok) {
+            activeRequestId = data.request_id;
+            btn.textContent = 'Submitted!';
+            btn.classList.add('success');
+            setTimeout(() => {
+                btn.textContent = 'Submit Investigation';
+                btn.classList.remove('success');
+                btn.disabled = false;
+            }, 2000);
+
+            // Start polling for status updates
+            startStatusPolling();
+            // Refresh history list
+            loadRequestHistory();
+        } else {
+            alert('Failed to submit: ' + (data.error || 'Unknown error'));
+            btn.textContent = 'Submit Investigation';
+            btn.disabled = false;
+        }
+    } catch (e) {
+        alert('Network error: ' + e.message);
+        btn.textContent = 'Submit Investigation';
+        btn.disabled = false;
+    }
+}
+
+function startStatusPolling() {
+    if (statusPollTimer) clearInterval(statusPollTimer);
+    pollActiveRequest();
+    statusPollTimer = setInterval(pollActiveRequest, 5000);
+}
+
+async function pollActiveRequest() {
+    if (!activeRequestId) return;
+
+    try {
+        const resp = await fetch('/api/request/' + activeRequestId);
+        const data = await resp.json();
+
+        if (!resp.ok) {
+            stopStatusPolling();
+            return;
+        }
+
+        renderActiveRequest(data);
+
+        // Stop polling when terminal state reached
+        if (data.status === 'completed' || data.status === 'failed') {
+            stopStatusPolling();
+            loadRequestHistory();
+        }
+    } catch (e) {
+        // Network error, keep trying
+    }
+}
+
+function stopStatusPolling() {
+    if (statusPollTimer) {
+        clearInterval(statusPollTimer);
+        statusPollTimer = null;
+    }
+}
+
+const STATUS_LABELS = {
+    'awaiting_workbuddy': 'Awaiting WorkBuddy',
+    'investigating': 'Investigating',
+    'generating_reports': 'Generating Reports',
+    'completed': 'Completed',
+    'failed': 'Failed',
+};
+
+function renderActiveRequest(data) {
+    const el = document.getElementById('activeRequest');
+    el.classList.add('show');
+
+    const badge = document.getElementById('activeStatusBadge');
+    const statusText = document.getElementById('activeStatusText');
+    const statusCls = data.status === 'awaiting_workbuddy' ? 'awaiting'
+        : data.status === 'investigating' ? 'investigating'
+        : data.status === 'generating_reports' ? 'generating'
+        : data.status === 'completed' ? 'completed'
+        : data.status === 'failed' ? 'failed' : 'awaiting';
+
+    badge.className = 'ai-inv-status-badge ' + statusCls;
+    statusText.textContent = STATUS_LABELS[data.status] || data.status;
+
+    document.getElementById('activeReqId').textContent = data.request_id || '';
+    document.getElementById('activeReqQuestion').textContent = '"' + (data.question || '') + '"';
+
+    const detailsEl = document.getElementById('activeReqDetails');
+
+    if (data.status === 'awaiting_workbuddy') {
+        detailsEl.innerHTML =
+            '<div class="ai-inv-notice-inline">' +
+            '<b>No AI results yet.</b> This request is awaiting WorkBuddy. ' +
+            'Click <b>Copy Request</b> above, then paste the question into your ' +
+            'WorkBuddy AI workspace. The dashboard will update automatically when the agent begins work.' +
+            '</div>';
+    } else if (data.status === 'investigating' || data.status === 'generating_reports') {
+        detailsEl.innerHTML =
+            '<div class="ai-inv-notice-inline">' +
+            'WorkBuddy agent is working on this request. Status updates appear automatically.' +
+            '</div>';
+    } else if (data.status === 'completed') {
+        let html = '<div class="ai-inv-notice-inline"><b>Investigation complete.</b> Output files:</div>';
+        html += '<div class="ai-inv-output-files">';
+        if (data.outputs && data.outputs.length > 0) {
+            for (const fn of data.outputs) {
+                html += '<a href="/api/request/' + data.request_id + '/output/' + encodeURIComponent(fn) + '" target="_blank">&#128196; ' + escapeHtml(fn) + '</a>';
+            }
+        } else {
+            html += '<span style="color:#6c757d;font-size:0.8rem;">No output files found.</span>';
+        }
+        html += '</div>';
+        detailsEl.innerHTML = html;
+    } else if (data.status === 'failed') {
+        detailsEl.innerHTML =
+            '<div class="ai-inv-notice-inline" style="background:#fff5f5;border-color:#f8d7da;color:#721c24;">' +
+            '<b>Investigation failed:</b> ' + escapeHtml(data.error || 'Unknown error') +
+            '</div>';
+    }
+}
+
+async function loadRequestHistory() {
+    try {
+        const resp = await fetch('/api/requests');
+        const data = await resp.json();
+        renderHistory(data);
+    } catch (e) {
+        // silent fail
+    }
+}
+
+function renderHistory(requests) {
+    const el = document.getElementById('historyList');
+
+    if (!requests || requests.length === 0) {
+        el.innerHTML = '<div class="ai-inv-history-empty">No investigations yet. Submit a question to begin.</div>';
+        return;
+    }
+
+    el.innerHTML = requests.map(r => {
+        const statusLabel = STATUS_LABELS[r.status] || r.status;
+        const statusCls = r.status === 'awaiting_workbuddy' ? 'awaiting'
+            : r.status === 'investigating' ? 'investigating'
+            : r.status === 'generating_reports' ? 'generating'
+            : r.status === 'completed' ? 'completed'
+            : r.status === 'failed' ? 'failed' : 'awaiting';
+        const sel = r.request_id === selectedHistoryRid ? ' selected' : '';
+        const qShort = (r.question || '').substring(0, 80) + (r.question && r.question.length > 80 ? '...' : '');
+        return '<div class="ai-inv-history-item' + sel + '" onclick="selectHistoryItem(\'' + r.request_id + '\')">' +
+            '<div class="hi-q">' + escapeHtml(qShort) + '</div>' +
+            '<div class="hi-meta">' +
+            '<span class="ai-inv-status-badge ' + statusCls + '"><span class="status-dot"></span>' + statusLabel + '</span>' +
+            '<span style="color:#6c757d;font-size:0.72rem;">' + (r.submitted_at || '') + '</span>' +
+            (r.output_count > 0 ? '<span style="color:#27ae60;font-size:0.72rem;">' + r.output_count + ' file(s)</span>' : '') +
+            '</div></div>';
+    }).join('');
+}
+
+async function selectHistoryItem(rid) {
+    selectedHistoryRid = rid;
+    activeRequestId = rid;
+
+    try {
+        const resp = await fetch('/api/request/' + rid);
+        const data = await resp.json();
+        if (resp.ok) {
+            renderActiveRequest(data);
+
+            // If completed, show output files in viewer area
+            if (data.status === 'completed' && data.outputs && data.outputs.length > 0) {
+                // Just highlight, the links are already in the active request area
+            }
+
+            // Restart polling if not in terminal state
+            if (data.status !== 'completed' && data.status !== 'failed') {
+                startStatusPolling();
+            } else {
+                stopStatusPolling();
+            }
+        }
+    } catch (e) {
+        // silent
+    }
+
+    // Refresh history to show selection
+    loadRequestHistory();
+}
+
+function closeViewer() {
+    document.getElementById('outputViewer').classList.remove('show');
+}
+
+async function demoReset() {
+    if (!confirm('This will clear all request files in requests/ and all output directories in outputs/.\\n\\nReports in reports/ and data in data/ will NOT be affected.\\n\\nContinue?')) {
+        return;
+    }
+
+    const btn = document.getElementById('resetBtn');
+    btn.disabled = true;
+    btn.textContent = 'Clearing...';
+
+    try {
+        const resp = await fetch('/api/demo_reset', {method: 'POST'});
+        const data = await resp.json();
+
+        if (resp.ok) {
+            btn.textContent = 'Cleared!';
+            setTimeout(() => {
+                btn.textContent = 'Clear Test Requests & Outputs';
+                btn.disabled = false;
+            }, 2000);
+
+            // Reset active request display
+            activeRequestId = null;
+            selectedHistoryRid = null;
+            stopStatusPolling();
+            document.getElementById('activeRequest').classList.remove('show');
+
+            // Refresh history (will show empty state)
+            loadRequestHistory();
+        } else {
+            alert('Failed: ' + (data.error || 'Unknown error'));
+            btn.textContent = 'Clear Test Requests & Outputs';
+            btn.disabled = false;
+        }
+    } catch (e) {
+        alert('Network error: ' + e.message);
+        btn.textContent = 'Clear Test Requests & Outputs';
+        btn.disabled = false;
+    }
+}
+
+async function loadAISummary() {
+    try {
+        const resp = await fetch('/api/ai_summary');
+        const data = await resp.json();
+        renderAISummary(data);
+    } catch (e) {
+        document.getElementById('aiInvResults').innerHTML =
+            '<div class="ai-inv-no-results" style="color:#e74c3c;">Failed to load AI investigation summaries: ' + e.message + '</div>';
+    }
+}
+
+function renderAISummary(data) {
+    const container = document.getElementById('aiInvResults');
+
+    if (!data.available) {
+        container.innerHTML =
+            '<div class="ai-inv-no-results">No AI investigation reports found. Run a WorkBuddy investigation to generate reports.</div>';
+        return;
+    }
+
+    let html = '<div class="ai-inv-results-title">Previous WorkBuddy Investigation Reports</div>';
+
+    for (const inv of data.investigations) {
+        if (!inv.available) continue;
+
+        const cls = inv.id === 2 ? ' rca' : '';
+        html += '<div class="ai-inv-investigation' + cls + '">';
+        html += '<div class="ai-inv-inv-header">';
+        html += '<span class="ai-inv-inv-title">Investigation ' + inv.id + ': ' + escapeHtml(inv.title) + '</span>';
+        html += '<span class="ai-inv-inv-meta">' + escapeHtml(inv.generated || '') + '</span>';
+        html += '</div>';
+
+        // Business request
+        if (inv.business_request) {
+            html += '<div class="ai-inv-inv-request">"' + escapeHtml(inv.business_request) + '"</div>';
+        }
+
+        // Verdict (Investigation 1)
+        if (inv.verdict) {
+            const vcls = inv.verdict.includes('NOT READY') ? ' not-ready' : ' ready';
+            html += '<div class="ai-inv-verdict' + vcls + '">' + escapeHtml(inv.verdict) + '</div>';
+        }
+
+        // Problems (Investigation 1)
+        if (inv.problems && inv.problems.length > 0) {
+            html += '<div class="ai-inv-problems">';
+            for (const p of inv.problems) {
+                const pcls = p.priority === 'CRITICAL' ? ' critical' : p.priority === 'HIGH' ? ' high' : '';
+                html += '<div class="ai-inv-problem' + pcls + '">';
+                html += '<span class="pill-inline ' + pcls.trim() + '">' + escapeHtml(p.priority) + '</span>';
+                html += escapeHtml(p.issue);
+                html += '</div>';
+            }
+            html += '</div>';
+        }
+
+        // Work Orders (Investigation 1)
+        if (inv.work_orders && inv.work_orders.length > 0) {
+            html += '<table class="ai-inv-wo-table">';
+            html += '<tr><th>WO #</th><th>Title</th><th>Priority</th><th>System</th><th>Status</th></tr>';
+            for (const wo of inv.work_orders) {
+                html += '<tr>';
+                html += '<td>' + escapeHtml(wo.id) + '</td>';
+                html += '<td>' + escapeHtml(wo.title) + '</td>';
+                html += '<td>' + escapeHtml(wo.priority) + '</td>';
+                html += '<td>' + escapeHtml(wo.system) + '</td>';
+                html += '<td>' + escapeHtml(wo.status) + '</td>';
+                html += '</tr>';
+            }
+            html += '</table>';
+        }
+
+        // Summary text (Investigation 2)
+        if (inv.summary) {
+            html += '<div class="ai-inv-summary-text">' + escapeHtml(inv.summary) + '</div>';
+        }
+
+        // Conclusion (Investigation 2)
+        if (inv.conclusion) {
+            html += '<div class="ai-inv-summary-text"><b>Conclusion:</b> ' + escapeHtml(inv.conclusion) + '</div>';
+        }
+
+        // Contractor summary (Investigation 2)
+        if (inv.contractor_summary) {
+            html += '<div class="ai-inv-summary-text"><b>Contractor briefing:</b> ' + escapeHtml(inv.contractor_summary) + '</div>';
+        }
+
+        // Report links
+        html += '<div style="margin-top:8px;font-size:0.78rem;">';
+        html += '<a href="/api/reports/' + inv.report_file + '" target="_blank" style="color:#6c5ce7;text-decoration:none;">&#128196; ' + escapeHtml(inv.report_file) + '</a>';
+        if (inv.work_orders_file) {
+            html += ' &nbsp; <a href="/api/reports/' + inv.work_orders_file + '" target="_blank" style="color:#6c5ce7;text-decoration:none;">&#128196; ' + escapeHtml(inv.work_orders_file) + '</a>';
+        }
+        if (inv.contractor_briefing_file) {
+            html += ' &nbsp; <a href="/api/reports/' + inv.contractor_briefing_file + '" target="_blank" style="color:#6c5ce7;text-decoration:none;">&#128196; ' + escapeHtml(inv.contractor_briefing_file) + '</a>';
+        }
+        html += '</div>';
+
+        html += '</div>';
+    }
+
+    // Comparison link
+    if (data.comparison_file) {
+        html += '<div style="margin-top:8px;font-size:0.8rem;color:#555;">';
+        html += '<a href="/api/reports/' + data.comparison_file + '" target="_blank" style="color:#6c5ce7;text-decoration:none;">&#128196; ' + escapeHtml(data.comparison_file) + ' (strategy comparison)</a>';
+        html += '</div>';
+    }
+
+    // Disclaimer
+    if (data.disclaimer) {
+        html += '<div class="ai-inv-disclaimer">' + escapeHtml(data.disclaimer) + '</div>';
+    }
+
+    container.innerHTML = html;
+}
+
+function escapeHtml(text) {
+    if (text === null || text === undefined) return '';
+    const div = document.createElement('div');
+    div.textContent = String(text);
+    return div.innerHTML;
+}
+
+// ── Keyboard shortcuts ──
+document.addEventListener('keydown', (e) => {
+    if (e.target.tagName === 'SELECT' || e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+    if (e.key === 'ArrowLeft') { e.preventDefault(); stepPrev(); }
+    if (e.key === 'ArrowRight') { e.preventDefault(); stepNext(); }
+    if (e.key === ' ') { e.preventDefault(); playPause(); }
+});
+
+init();
+</script>
+</body>
+</html>

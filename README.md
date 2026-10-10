@@ -59,11 +59,8 @@ GenBuddy addresses this gap by providing:
 ### Workflow Steps
 
 1. **User submits a question** on the dashboard's AI Investigation Center (e.g., "Is my backup generator ready for the next power outage?").
-
 2. **Flask saves the question** as a JSON file in `requests/` with status `awaiting_workbuddy`. Flask does **not** invoke WorkBuddy — the dashboard is a file manager, not an AI gateway.
-
 3. **User copies the question** (Copy Request button) and pastes it into their WorkBuddy AI workspace.
-
 4. **WorkBuddy agent investigates**:
    - Reads the pending request from `requests/` via curl to the Flask API
    - Updates status to `investigating`
@@ -75,7 +72,6 @@ GenBuddy addresses this gap by providing:
    - Updates status to `generating_reports`
    - Writes report files to `outputs/<request_id>/`
    - Updates status to `completed`
-
 5. **Dashboard auto-polls** every 5 seconds and displays the status timeline, then shows the completed output files with download links.
 
 ### Manual Triggering
@@ -86,24 +82,21 @@ The organizer confirmed: **WorkBuddy does not need to be directly integrated int
 
 ## 3. Deterministic Python vs. Genuine WorkBuddy LLM Reasoning
 
-| Component | Type | What It Does |
-|-----------|------|--------------|
-| `scripts/generate_data.py` | Deterministic Python | Generates simulated telemetry, ATS events, and maintenance records |
-| `scripts/validate_data.py` | Deterministic Python | 13 automated checks: column presence, electrical consistency, timestamp sync, scenario verification, duplicates |
-| `scripts/fault_investigation.py` | Deterministic Python | Pattern-based detection (NORMAL_OPERATION, OVERHEATING, ATS_TRANSFER_FAILURE) and report generation |
-| `app.py` (Flask backend) | Deterministic Python | Serves data, manages request files, provides API endpoints |
-| `templates/index.html` | Deterministic JavaScript | Dashboard UI with playback, charts, ATS panel, findings |
-| `/api/ask` endpoint | Rule-based Python | Keyword matching routes to pre-built analysis functions |
+| Component                          | Type                      | What It Does                                                                                                                                                                                                   |
+| ---------------------------------- | ------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `scripts/generate_data.py`         | Deterministic Python      | Generates simulated telemetry, ATS events, and maintenance records                                                                                                                                             |
+| `scripts/validate_data.py`         | Deterministic Python      | 13 automated checks: column presence, electrical consistency, timestamp sync, scenario verification, duplicates                                                                                                |
+| `scripts/fault_investigation.py`   | Deterministic Python      | Pattern-based detection (NORMAL_OPERATION, OVERHEATING, ATS_TRANSFER_FAILURE) and report generation                                                                                                            |
+| `app.py` (Flask backend)           | Deterministic Python      | Serves data, manages request files, provides API endpoints                                                                                                                                                     |
+| `templates/index.html`             | Deterministic JavaScript  | Dashboard UI with playback, charts, ATS panel, findings                                                                                                                                                        |
+| `/api/ask` endpoint                | Rule-based Python         | Keyword matching routes to pre-built analysis functions                                                                                                                                                        |
 | **WorkBuddy agent investigations** | **Genuine LLM reasoning** | **Plans before acting, selects tools, reads raw data independently, performs cross-scenario comparison, reasons about root causes, adapts workflow per question, generates audience-appropriate deliverables** |
 
 ### What WorkBuddy Does That the Python Scripts Cannot
 
-1. **Cross-scenario thermal comparison**: The scripts detect that Scenario 2 had overheating. WorkBuddy independently computed that a 9.8 percentage-point load increase (60.2% → 70.0%) caused a disproportionate 22.8°C temperature rise (84.9°C → 107.7°C), concluding the cooling system has zero thermal margin.
-
-2. **Maintenance adequacy assessment**: The scripts report the last service date. WorkBuddy independently observed that both failed systems (radiator and ATS contacts) were serviced 17 days before the incident, and concluded that visual inspection was insufficient — functional load testing would have detected both issues.
-
+1. **Cross-scenario thermal comparison**: The scripts detect that Scenario 2 had overheating. WorkBuddy independently computed that a 9.8 percentage-point load increase (60.2% → 70.0%) caused a disproportionate 22.8°C temperature rise (84.9°C → 107.7°C), suggesting the cooling system may have limited thermal reserve at higher loads.
+2. **Maintenance adequacy assessment**: The scripts report the last service date. WorkBuddy independently observed that both systems that later failed (radiator and ATS contacts) were serviced 17 days before the incident, and noted that visual inspection alone may not have been sufficient — functional load testing could plausibly have identified one or both issues before the incident.
 3. **Workflow adaptation**: For Investigation 1 (readiness), WorkBuddy created a 13-step plan covering all 356 records and all 3 scenarios. For Investigation 2 (root cause), it created an 8-step plan focused on 92 records in the failure window. Different plans, different data scope, different analysis method, different deliverable format — all decided by the agent.
-
 4. **Self-correction**: In Investigation 3, WorkBuddy found and corrected a temperature rise rate calculation error in 3 report files (4 instances), replacing incorrect values with data derived from actual CSV timestamps.
 
 ---
@@ -125,6 +118,7 @@ When deployed with `PUBLIC_DEMO_MODE=1`, the dashboard provides:
 - Report file downloads (whitelisted .md and .csv files)
 
 **Disabled in public mode:**
+
 - Submit Investigation (no new requests)
 - Status updates (no agent-triggered updates)
 - Demo Reset (no file deletion)
@@ -137,19 +131,16 @@ To reproduce the full input → WorkBuddy → output workflow:
 
 1. **Clone the repository:**
    ```bash
-   git clone <repo-url>
+   git clone https://github.com/cleo-blayea/Dormathon_Hackathon_Cleo.git
    cd GenBuddy_Hackathon
    pip install -r requirements.txt
    ```
-
 2. **Start the dashboard in local mode:**
    ```bash
    python app.py
    ```
-   The dashboard runs on http://127.0.0.1:5000 (localhost only).
-
+   The dashboard runs on <http://127.0.0.1:5000> (localhost only).
 3. **Submit a question** in the AI Investigation Center. Click "Submit Investigation", then "Copy Request".
-
 4. **Paste the question into WorkBuddy AI** (desktop app or browser). The agent will:
    - Detect the pending request via `GET /api/requests`
    - Update status to `investigating`
@@ -158,10 +149,10 @@ To reproduce the full input → WorkBuddy → output workflow:
    - Synthesize findings with LLM reasoning
    - Write reports to `outputs/<request_id>/`
    - Update status to `completed`
-
 5. **The dashboard auto-polls** every 5 seconds and displays results when ready.
 
 For evidence of genuine WorkBuddy usage, see:
+
 - `docs/workbuddy_usage_evidence.md` — 7-section evidence document
 - `reports/ai_*.md` — 7 actual AI-generated investigation reports
 - `docs/api_integration_analysis.md` — analysis of WorkBuddy API integration options
@@ -171,32 +162,29 @@ For evidence of genuine WorkBuddy usage, see:
 ## 5. Limitations
 
 1. **Simulated historical data**: All telemetry comes from `scripts/generate_data.py`. No real generator is connected. The DSE6120 alarm thresholds are unverified — they are reasonable defaults, not manufacturer-confirmed values.
-
 2. **Manual WorkBuddy triggering**: The dashboard does not automatically invoke the WorkBuddy agent. A human must copy the question from the dashboard and paste it into WorkBuddy. This is a deliberate design choice based on the organizer's clarification that WorkBuddy integration is not required — only proof of usage.
-
 3. **Single-user request system**: The file-based request system stores JSON in `requests/` and outputs in `outputs/`. There is no authentication, no multi-user isolation, and no database. This is sufficient for local demonstration but not for production multi-user deployment.
-
 4. **Local runtime files**: The `requests/` and `outputs/` directories contain local runtime artifacts (submitted questions, investigation outputs). These are excluded from the public deployment via `.gitignore` and the PUBLIC_DEMO_MODE flag.
-
 5. **Rule-based Q&A**: The `/api/ask` endpoint uses keyword matching, not an LLM. It provides structured analysis based on deterministic data processing. Genuine LLM reasoning is demonstrated through the WorkBuddy agent investigations, not through this endpoint.
+6. **ATS facility power indicator**: The `FACILITY_NO_POWER` alarm in the ATS event log is a simulated controller field, not an independent load-bus voltage measurement. It indicates possible building power loss but does not definitively confirm it. No load-bus voltage data is present in the dataset.
 
 ---
 
 ## 6. Reference Generator
 
-| Parameter | Value |
-|-----------|-------|
-| Manufacturer | AI Power |
-| Model | ASC344 |
-| Engine | SDEC SC13G420D2 |
-| Application | Simulated standby generator |
-| Standby rating | 344 kVA / 275 kW |
-| Output | 400/230 V, three-phase, 50 Hz |
-| Power factor | 0.8 |
-| Engine speed | 1500 rpm |
-| Starting battery | 24 V |
-| Fuel tank | 522 L |
-| Controller | Deep Sea Electronics DSE6120 |
+| Parameter        | Value                         |
+| ---------------- | ----------------------------- |
+| Manufacturer     | AI Power                      |
+| Model            | ASC344                        |
+| Engine           | SDEC SC13G420D2               |
+| Application      | Simulated standby generator   |
+| Standby rating   | 344 kVA / 275 kW              |
+| Output           | 400/230 V, three-phase, 50 Hz |
+| Power factor     | 0.8                           |
+| Engine speed     | 1500 rpm                      |
+| Starting battery | 24 V                          |
+| Fuel tank        | 522 L                         |
+| Controller       | Deep Sea Electronics DSE6120  |
 
 ---
 
@@ -247,21 +235,24 @@ GenBuddy_Hackathon/
 ## 8. Data Files
 
 ### generator_data.csv
+
 Simulated telemetry with columns: timestamp, operating_state, voltage_LL_V, frequency_Hz, current_A, active_power_kW, power_factor, engine_speed_rpm, coolant_temp_C, oil_pressure_bar, battery_V, fuel_level_L, running_hours.
 
 ### ats_events.csv
+
 ATS event log with columns: timestamp, utility_supply_status, generator_start_command, generator_running_status, ats_commanded_source, ats_actual_position, transfer_confirmation, alarm_events.
 
 ### maintenance_history.csv
+
 Maintenance log with columns: maintenance_date, running_hours, maintenance_type, work_description, next_inspection_date.
 
 ### Scenarios Simulated
 
-| Scenario | Description | Severity |
-|----------|-------------|----------|
-| A — Normal Operation | Utility fails → generator starts → ATS transfers → utility restores → generator stops. 77 confirmed transfers. | INFO |
-| B — Overheating | At 70% load, coolant temperature rose from 44.8°C to 107.7°C over 47 minutes. Oil pressure declined from 4.54 to 3.24 bar. Over-temp shutdown triggered. | HIGH |
-| C — ATS Failure | Generator started correctly (402V, 50.07Hz) but ATS could not transfer to GENERATOR position. 11 consecutive failed transfers. Facility without power for 10 minutes. | CRITICAL |
+| Scenario             | Description                                                                                                                                                           | Severity |
+| -------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------- |
+| A — Normal Operation | Utility fails → generator starts → ATS transfers → utility restores → generator stops. 77 confirmed transfers.                                                        | INFO     |
+| B — Overheating      | At 70% load, coolant temperature rose from 44.8°C to 107.7°C over 47 minutes. Oil pressure declined from 4.54 to 3.24 bar. Over-temp shutdown triggered.              | HIGH     |
+| C — ATS Failure      | Generator started correctly (402V, 50.07Hz) but ATS could not transfer to GENERATOR position. 11 consecutive failed transfers. FACILITY_NO_POWER alarm present for ~10 minutes (simulated alarm field; no independent load-bus voltage measurement in dataset). | CRITICAL |
 
 ---
 
@@ -275,18 +266,32 @@ pip install -r requirements.txt
 python app.py
 ```
 
-Open http://127.0.0.1:5000 — all features available (submit, analyze, reset, request system).
+Open <http://127.0.0.1:5000> — all features available (submit, analyze, reset, request system).
 
 ### Public Demo Mode (Read-Only)
 
+**Linux / macOS / Git Bash (Windows):**
 ```bash
 cd GenBuddy_Hackathon
 pip install -r requirements.txt
 PUBLIC_DEMO_MODE=1 python app.py
 ```
 
-Or using the WSGI entry point:
+**Windows Command Prompt:**
+```cmd
+cd GenBuddy_Hackathon
+pip install -r requirements.txt
+set PUBLIC_DEMO_MODE=1 && python app.py
+```
 
+**Windows PowerShell:**
+```powershell
+cd GenBuddy_Hackathon
+pip install -r requirements.txt
+$env:PUBLIC_DEMO_MODE=1; python app.py
+```
+
+Or using the WSGI entry point (auto-sets `PUBLIC_DEMO_MODE=1`, all platforms):
 ```bash
 waitress-serve --host=0.0.0.0 --port=5000 wsgi:application
 ```

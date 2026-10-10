@@ -52,9 +52,9 @@
 - [20:01:40]   Next inspection due: 2026-08-15
 - [20:01:40] STEP 4: Generating reports
 - [20:01:40] STEP 4a: Generating generator_health_report.md
-- [20:01:40]   Written: C:\Users\cleol\Documents\Dormathon\GenBuddy_Hackathon\reports\generator_health_report.md
+- [20:01:40]   Written: reports/generator_health_report.md
 - [20:01:40] STEP 4b: Generating maintenance_action_plan.csv
-- [20:01:40]   Written: C:\Users\cleol\Documents\Dormathon\GenBuddy_Hackathon\reports\maintenance_action_plan.csv (3 findings)
+- [20:01:40]   Written: reports/maintenance_action_plan.csv (3 findings)
 - [20:01:40] STEP 4c: Generating agent_execution_log.md
 
 ## Validation Results
@@ -86,7 +86,7 @@ CHECK 13: ATS-position vs load-current topology consistency
 
 ## Generated Files
 
-- `C:\Users\cleol\Documents\Dormathon\GenBuddy_Hackathon\reports\generator_health_report.md`
-- `C:\Users\cleol\Documents\Dormathon\GenBuddy_Hackathon\reports\maintenance_action_plan.csv`
+- `reports/generator_health_report.md`
+- `reports/maintenance_action_plan.csv`
 
 **Execution completed:** 2026-10-10 20:01:40 (0.9s elapsed)

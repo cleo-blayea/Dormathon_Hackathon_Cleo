@@ -76,7 +76,7 @@ WorkBuddy performed **three genuine AI investigations** using the GenBuddy data 
 **Key agent findings:**
 - Distinguished observed facts (0A current, commanded vs actual position mismatch) from suspected causes (contactor seizure, wiring fault, sensor fault)
 - Reconstructed timestamp-level timeline: 30-to-60-second sampling intervals, 11 consecutive FAILED transfers, 10-minute no-load run, safety shutdown
-- Assessed maintenance adequacy: ATS contacts were inspected 17 days before but visual inspection missed the impending failure -- a functional transfer test would have detected the problem
+- Assessed maintenance adequacy: ATS contacts were inspected 17 days before but visual inspection may not have been sufficient — a functional transfer test could plausibly have identified the problem
 
 **Deliverables:**
 - `reports/ai_root_cause_analysis.md` (178 lines) -- 4-phase failure timeline, root cause analysis

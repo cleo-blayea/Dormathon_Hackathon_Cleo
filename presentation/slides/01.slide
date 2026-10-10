@@ -1,0 +1,62 @@
+<Slide style={{ width: '1280px', height: '720px', padding: 0, background: '#0B1E3F' }}>
+  {/* Decorative accent shapes */}
+  <Box style={{ position: 'absolute', top: 0, left: 0, width: '8px', height: '720px', background: 'linear-gradient(180deg, #06B6D4 0%, #2563EB 100%)' }} />
+  <Box style={{ position: 'absolute', top: 80, right: 60, width: '320px', height: '320px', borderRadius: '50%', background: 'radial-gradient(circle, rgba(6,182,212,0.15) 0%, rgba(6,182,212,0) 70%)' }} />
+  <Box style={{ position: 'absolute', bottom: 40, right: 120, width: '180px', height: '180px', borderRadius: '50%', background: 'radial-gradient(circle, rgba(37,99,235,0.2) 0%, rgba(37,99,235,0) 70%)' }} />
+
+  {/* Top badge bar */}
+  <Box style={{ position: 'absolute', top: 40, left: 60, flexDirection: 'row', alignItems: 'center', gap: 12 }}>
+    <Box style={{ width: 12, height: 12, borderRadius: '50%', background: '#06B6D4' }} />
+    <Text style={{ fontSize: 14, color: '#06B6D4', fontWeight: 600, letterSpacing: 2 }}>DORMATHON 2026 · TRACK 2</Text>
+  </Box>
+
+  <Box style={{ position: 'absolute', top: 40, right: 60, padding: '6px 16px', borderRadius: 20, background: 'rgba(239,68,68,0.18)', border: '1px solid rgba(239,68,68,0.5)' }}>
+    <Text style={{ fontSize: 12, color: '#FCA5A5', fontWeight: 700, letterSpacing: 1 }}>SIMULATED HISTORICAL DATA</Text>
+  </Box>
+
+  {/* Main title block */}
+  <Box style={{ position: 'absolute', top: 180, left: 60, width: '900px' }}>
+    <Text style={{ fontSize: 18, color: '#06B6D4', fontWeight: 600, letterSpacing: 3, marginBottom: 16 }}>AGENTIC SOLUTIONS</Text>
+    <Text style={{ fontSize: 64, color: '#FFFFFF', fontWeight: 800, lineHeight: 1.1, marginBottom: 8 }}>
+      GenBuddy
+    </Text>
+    <Text style={{ fontSize: 32, color: '#FFFFFF', fontWeight: 500, lineHeight: 1.3, marginBottom: 24 }}>
+      AI-Powered Backup Generator
+      <br />
+      Maintenance Assistant
+    </Text>
+    <Text style={{ fontSize: 16, color: '#94A3B8', lineHeight: 1.5 }}>
+      Turn generator telemetry, ATS events, and maintenance records
+      <br />
+      into actionable readiness assessments — with a WorkBuddy AI agent
+      <br />
+      that plans, investigates, and reasons on its own.
+    </Text>
+  </Box>
+
+  {/* Hero metric strip */}
+  <Box style={{ position: 'absolute', bottom: 110, left: 60, flexDirection: 'row', gap: 56 }}>
+    <Box>
+      <Text style={{ fontSize: 36, color: '#06B6D4', fontWeight: 800, lineHeight: 1 }}>356</Text>
+      <Text style={{ fontSize: 12, color: '#94A3B8', marginTop: 4 }}>Telemetry records</Text>
+    </Box>
+    <Box>
+      <Text style={{ fontSize: 36, color: '#06B6D4', fontWeight: 800, lineHeight: 1 }}>3</Text>
+      <Text style={{ fontSize: 12, color: '#94A3B8', marginTop: 4 }}>AI investigations</Text>
+    </Box>
+    <Box>
+      <Text style={{ fontSize: 36, color: '#06B6D4', fontWeight: 800, lineHeight: 1 }}>7</Text>
+      <Text style={{ fontSize: 12, color: '#94A3B8', marginTop: 4 }}>Agent reports</Text>
+    </Box>
+    <Box>
+      <Text style={{ fontSize: 36, color: '#06B6D4', fontWeight: 800, lineHeight: 1 }}>13</Text>
+      <Text style={{ fontSize: 12, color: '#94A3B8', marginTop: 4 }}>Planned steps (Inv 1)</Text>
+    </Box>
+  </Box>
+
+  {/* Footer */}
+  <Box style={{ position: 'absolute', bottom: 32, left: 60, right: 60, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+    <Text style={{ fontSize: 12, color: '#64748B' }}>DORMATHON 2026 · Track 2: Agentic Solutions</Text>
+    <Text style={{ fontSize: 12, color: '#64748B' }}>01 / 10</Text>
+  </Box>
+</Slide>

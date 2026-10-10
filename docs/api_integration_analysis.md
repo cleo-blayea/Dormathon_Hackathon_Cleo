@@ -51,7 +51,7 @@
 | Agent development     | REQUIRED — would need to define system prompt, skills, model in Manifest JSON                                                                                      |
 | Hackathon feasibility | NO — enterprise approval, CAM setup, agent development, and skill packaging cannot be completed before deadline                                                    |
 
-**Key limitation:** Even if enterprise access were granted, the cloud-hosted agent CANNOT access your local `C:/Users/cleol/Documents/Dormathon/GenBuddy_Hackathon/` project files. The agent runs in a Tencent Cloud sandbox with its own filesystem. You would need to package `validate_data.py`, `fault_investigation.py`, and the CSV datasets into the agent's Manifest as Skills — essentially rebuilding the investigation toolchain for the cloud.
+**Key limitation:** Even if enterprise access were granted, the cloud-hosted agent CANNOT access your local `<project_root>/` project files. The agent runs in a Tencent Cloud sandbox with its own filesystem. You would need to package `validate_data.py`, `fault_investigation.py`, and the CSV datasets into the agent's Manifest as Skills — essentially rebuilding the investigation toolchain for the cloud.
 
 ---
 

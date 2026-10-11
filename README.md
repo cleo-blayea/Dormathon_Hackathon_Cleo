@@ -1,7 +1,7 @@
 # GenBuddy
 
 **AI-Powered Backup Generator Readiness Monitoring for SMEs**
-
+> Open https://dormathon-hackathon-cleo.onrender.com/ - read-only monitoring (generator telemetry, ATS events, historical playback, and published AI reports).
 > **DISCLAIMER:** All data in this project is **simulated**. No real generator is connected, monitored, or controlled. Nothing in this repository interacts with physical equipment.
 
 > **DORMATHON 2026 — Track 2: Agentic Solutions**

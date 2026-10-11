@@ -267,6 +267,7 @@ python app.py
 ```
 
 Open <http://127.0.0.1:5000> — all features available (submit, analyze, reset, request system).
+Open <https://dormathon-hackathon-cleo.onrender.com/> - read-only monitoring (generator telemetry, ATS events, historical playback, and published AI reports).
 
 ### Public Demo Mode (Read-Only)
 
